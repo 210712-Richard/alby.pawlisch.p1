@@ -13,7 +13,7 @@ public class DataBaseCreator {
 		StringBuilder stringBuild = new StringBuilder("DROP TABLE IF EXISTS User;");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
-		stringBuild = new StringBuilder("DROP TABLE IF EXISTS Received_Notification;");
+		stringBuild = new StringBuilder("DROP TABLE IF EXISTS ReceivedNotif;");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 		// add more tables as they are needed
@@ -29,7 +29,7 @@ public class DataBaseCreator {
 		
 		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS Owned_Gacha (")
 				.append("sender text, receiver text, id uuid, message text, ")
-				.append("sendDate date);");
+				.append("sentDate date);");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 	}
 	

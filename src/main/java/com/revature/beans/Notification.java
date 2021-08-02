@@ -6,8 +6,8 @@ import java.util.UUID;
 
 public class Notification implements Serializable {
 	private UUID id;
-	private User sender;
-	private User reciever;
+	private String sender;
+	private String reciever;
 	private String message;
 	private LocalDate sentDate;
 	
@@ -17,7 +17,7 @@ public class Notification implements Serializable {
 	
 	
 	
-	public Notification(UUID id, User sender, User reciever, String message, LocalDate sentDate) {
+	public Notification(UUID id, String sender, String reciever, String message, LocalDate sentDate) {
 		this();
 		this.id = id;
 		this.sender = sender;
@@ -34,16 +34,16 @@ public class Notification implements Serializable {
 	public void setId(UUID id) {
 		this.id = id;
 	}
-	public User getSender() {
+	public String getSender() {
 		return sender;
 	}
-	public void setSender(User sender) {
+	public void setSender(String sender) {
 		this.sender = sender;
 	}
-	public User getReciever() {
+	public String getReciever() {
 		return reciever;
 	}
-	public void setReciever(User reciever) {
+	public void setReciever(String reciever) {
 		this.reciever = reciever;
 	}
 	public String getMessage() {
@@ -58,6 +58,9 @@ public class Notification implements Serializable {
 	public void setSentDate(LocalDate sentDate) {
 		this.sentDate = sentDate;
 	}
+
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -69,6 +72,9 @@ public class Notification implements Serializable {
 		result = prime * result + ((sentDate == null) ? 0 : sentDate.hashCode());
 		return result;
 	}
+
+
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -105,14 +111,12 @@ public class Notification implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
+
+
+
 	@Override
 	public String toString() {
 		return "Notification [id=" + id + ", sender=" + sender + ", reciever=" + reciever + ", message=" + message
 				+ ", sentDate=" + sentDate + "]";
 	}
-	
-	
-	
 }
