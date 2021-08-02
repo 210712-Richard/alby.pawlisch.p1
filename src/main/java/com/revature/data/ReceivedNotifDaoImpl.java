@@ -23,7 +23,7 @@ public class ReceivedNotifDaoImpl implements ReceivedNotifDao {
 	
 	@Override
 	public void addNotif(Notification notif) {
-		String query = "Insert into receivednotif (sender, reciever, message, sentDate) values (?, ?, ?, ?);";
+		String query = "Insert into receivednotif (sender, receiver, message, sentDate) values (?, ?, ?, ?);";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
 		BoundStatement bound = session.prepare(simple)
 				.bind(notif.getSender(), notif.getReciever(), notif.getMessage(), notif.getSentDate());
@@ -41,7 +41,7 @@ public class ReceivedNotifDaoImpl implements ReceivedNotifDao {
 			Notification notif = new Notification();
 			notif.setId(row.getUuid("id"));
 			notif.setSender(row.getString("sender"));
-			notif.setReciever(row.getString("reciever"));
+			notif.setReciever(row.getString("receiver"));
 			notif.setMessage(row.getString("message"));
 			notif.setSentDate(row.getLocalDate("sentdate"));
 			
@@ -65,7 +65,7 @@ public class ReceivedNotifDaoImpl implements ReceivedNotifDao {
 		Notification notif = new Notification();
 		notif.setId(row.getUuid("id"));
 		notif.setSender(row.getString("sender"));
-		notif.setReciever(row.getString("reciever"));
+		notif.setReciever(row.getString("receiver"));
 		notif.setMessage(row.getString("message"));
 		notif.setSentDate(row.getLocalDate("sentdate"));
 		

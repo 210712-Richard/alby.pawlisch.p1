@@ -28,7 +28,7 @@ public class DataBaseCreator {
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS Owned_Gacha (")
-				.append("sender text, receiver text, id uuid, message text, ")
+				.append("sender text, receiver text, id uuid, message text, primary key (id, receiver)")
 				.append("sentDate date);");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 	}
