@@ -11,9 +11,9 @@ import com.revature.services.UserServiceImpl;
 import io.javalin.http.Context;
 
 @Log
-public interface UserControllerImpl /*implements UserController*/ {
-	//private static Logger log = LogManager.getLogger(UserControllerImpl.class);
-	//private UserService us = (UserService) BeanFactory.getFactory().get(UserService.class, UserServiceImpl.class);
+public interface UserControllerImpl implements UserController {
+	private static Logger log = LogManager.getLogger(UserControllerImpl.class);
+	private UserService userService = (UserService) BeanFactory.getFactory().get(UserService.class, UserServiceImpl.class);
 	
 
 }

@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService{
 	private Logger log = LogManager.getLogger(UserServiceImpl.class);
 	public UserDao userDao = (UserDao) BeanFactory.getFactory().get(UserDao.class, UserDaoImpl.class);
 
-	public ReceivedNotifDao receivedNotifDao = (ReceivedNotifDao) BeanFactory.getFactory().get(OwnedReceivedNotifDao.class, ReceivedNotifDaoImpl.class);
+	public ReceivedNotifDao receivedNotifDao = (ReceivedNotifDao) BeanFactory.getFactory().get(ReceivedNotifDao.class, ReceivedNotifDaoImpl.class);
 
 	@Override
 	public User login(String username) {
