@@ -28,11 +28,19 @@ public class UserServiceImpl implements UserService{
 	public User login(String username) {
 		User user = userDao.getUser(username);
 		
-		List<Notification> inboxList = userDao.getUserInbox(username);
-		
-		//user.setInbox(inboxList);
 		return user;
 		
 	}
+	
+	@Override
+	public List<Notification> getInbox(String username){
+		List<Notification> inbox = userDao.getUserInbox(username);
+		return inbox;
+		
+	}
+	
+	
+	
+	
 
 }

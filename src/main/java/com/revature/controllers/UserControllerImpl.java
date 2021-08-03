@@ -1,8 +1,11 @@
 package com.revature.controllers;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.revature.beans.Notification;
 import com.revature.beans.User;
 import com.revature.factory.BeanFactory;
 import com.revature.factory.Log;
@@ -32,12 +35,28 @@ public class UserControllerImpl implements UserController {
 			ctx.json(user);
 			return;
 		}
+		
+		ctx.status(401); 
 	}
 	
 	@Override
 	public void logout(Context ctx) {
 		ctx.req.getSession().invalidate();
 		ctx.status(204);
+	}
+	
+	@Override
+	public void inbox(Context ctx) {
+		User loggedUser = (User) ctx.sessionAttribute("loggedUser");
+		
+		String username = loggedUser.getUsername();
+		List<Notification> inbox = userService.getInbox(username);
+		
+		if(inbox != null) {
+			ctx.json(inbox);
+		} else {
+			ctx.html("Inbox is empty");
+		}
 	}
 	
 }

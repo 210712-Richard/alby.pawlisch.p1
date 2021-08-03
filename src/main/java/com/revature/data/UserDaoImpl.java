@@ -93,23 +93,12 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public List<Notification> getUserInbox(String username) {
 		
-		// CHANGE TO THE OWNEDGACHADAOIMPL GETGACHA RULES
-		/*
-		String query = "Select inbox from user where username=?";
-		SimpleStatement s = new SimpleStatementBuilder(query).build();
-		BoundStatement bound = session.prepare(s).bind(username);
-		ResultSet rs = session.execute(bound);
-		Row row = rs.one();
-		if(row == null) {
-			return null;
-		}
-		List<UUID> inbox = row.getList("inbox", UUID.class);
-		return inbox;
-		*/
 		List<Notification> notifs = new ArrayList<Notification>();
-		String query = "Select id, sender, receiver, message, sentDate from receivednotif";
-		ResultSet resultSet = session.execute(new SimpleStatementBuilder(query).build());
+		String query = "Select id, sender, receiver, message, sentDate from receivednotif where receiver=?";
+		SimpleStatement simple = new SimpleStatementBuilder(query).build();
+		BoundStatement bound = session.prepare(simple).bind(username);
 		
+		ResultSet resultSet = session.execute(bound);
 		resultSet.forEach(row -> {
 			Notification notif = new Notification();
 			notif.setId(row.getUuid("id"));

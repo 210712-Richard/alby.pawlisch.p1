@@ -66,6 +66,7 @@ public class Driver {
 		
 		app.post("/users", userControl::login);
 		app.delete("/users", userControl::logout);
+		app.get("/users/inbox", userControl::inbox);
 
 	}
 	

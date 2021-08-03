@@ -8,4 +8,6 @@ public interface UserController {
 
 	void logout(Context ctx);
 
+	void inbox(Context ctx);
+
 }
