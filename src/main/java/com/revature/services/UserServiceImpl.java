@@ -28,12 +28,9 @@ public class UserServiceImpl implements UserService{
 	public User login(String username) {
 		User user = userDao.getUser(username);
 		
-		List<UUID> inboxIds = userDao.getUserInbox(username);
+		List<Notification> inboxList = userDao.getUserInbox(username);
 		
-		List<Notification> inbox = inboxIds.stream()
-				.map(id -> receivedNotifDao.getNotifById(id))
-				.collect(Collectors.toList());
-		user.setInbox(inbox);
+		//user.setInbox(inboxList);
 		return user;
 		
 	}

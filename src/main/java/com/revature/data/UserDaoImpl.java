@@ -12,6 +12,7 @@ import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.cql.SimpleStatementBuilder;
+import com.revature.beans.Notification;
 import com.revature.beans.User;
 import com.revature.factory.Log;
 import com.revature.util.CassandraUtil;
@@ -90,9 +91,10 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
-	public List<UUID> getUserInbox(String username) {
+	public List<Notification> getUserInbox(String username) {
 		
-		// CHANGE TO THE GACHADAOIMPL GETGACHA RULES
+		// CHANGE TO THE OWNEDGACHADAOIMPL GETGACHA RULES
+		/*
 		String query = "Select inbox from user where username=?";
 		SimpleStatement s = new SimpleStatementBuilder(query).build();
 		BoundStatement bound = session.prepare(s).bind(username);
@@ -103,6 +105,24 @@ public class UserDaoImpl implements UserDao {
 		}
 		List<UUID> inbox = row.getList("inbox", UUID.class);
 		return inbox;
+		*/
+		List<Notification> notifs = new ArrayList<Notification>();
+		String query = "Select id, sender, receiver, message, sentDate from receivednotif";
+		ResultSet resultSet = session.execute(new SimpleStatementBuilder(query).build());
+		
+		resultSet.forEach(row -> {
+			Notification notif = new Notification();
+			notif.setId(row.getUuid("id"));
+			notif.setSender(row.getString("sender"));
+			notif.setReciever(row.getString("receiver"));
+			notif.setMessage(row.getString("message"));
+			notif.setSentDate(row.getLocalDate("sentDate"));
+			
+			notifs.add(notif);
+		});
+		
+		return notifs;
+		
 	}
 
 }
