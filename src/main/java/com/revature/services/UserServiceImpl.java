@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService{
 				.map(id -> receivedNotifDao.getNotifById(id))
 				.collect(Collectors.toList());
 		user.setInbox(inbox);
-		return null;
+		return user;
 		
 	}
 

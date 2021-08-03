@@ -72,6 +72,7 @@ public class UserDaoImpl implements UserDao {
 		
 		return user;
 		
+		
 	}
 	
 	@Override
@@ -90,6 +91,8 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public List<UUID> getUserInbox(String username) {
+		
+		// CHANGE TO THE GACHADAOIMPL GETGACHA RULES
 		String query = "Select inbox from user where username=?";
 		SimpleStatement s = new SimpleStatementBuilder(query).build();
 		BoundStatement bound = session.prepare(s).bind(username);

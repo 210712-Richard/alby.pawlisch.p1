@@ -24,7 +24,7 @@ public class DataBaseCreator {
 	public static void createTables() {
 		StringBuilder stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS User (")
 				.append("username text PRIMARY KEY, email text, type text, ")
-				.append("supervisor, dephead, inbox list<uuid> );");
+				.append("supervisor text, dephead text, inbox list<uuid> );");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS Owned_Gacha (")
