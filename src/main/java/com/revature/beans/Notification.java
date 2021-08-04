@@ -6,7 +6,6 @@ import java.util.UUID;
 
 public class Notification implements Serializable {
 	private UUID id;
-	private String sender;
 	private String reciever;
 	private String message;
 	private LocalDate sentDate;
@@ -17,10 +16,9 @@ public class Notification implements Serializable {
 	
 	
 	
-	public Notification(UUID id, String sender, String reciever, String message, LocalDate sentDate) {
+	public Notification(UUID id, String reciever, String message, LocalDate sentDate) {
 		this();
 		this.id = id;
-		this.sender = sender;
 		this.reciever = reciever;
 		this.message = message;
 		this.sentDate = sentDate;
@@ -33,12 +31,6 @@ public class Notification implements Serializable {
 	}
 	public void setId(UUID id) {
 		this.id = id;
-	}
-	public String getSender() {
-		return sender;
-	}
-	public void setSender(String sender) {
-		this.sender = sender;
 	}
 	public String getReciever() {
 		return reciever;
@@ -68,7 +60,6 @@ public class Notification implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		result = prime * result + ((reciever == null) ? 0 : reciever.hashCode());
-		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
 		result = prime * result + ((sentDate == null) ? 0 : sentDate.hashCode());
 		return result;
 	}
@@ -99,11 +90,6 @@ public class Notification implements Serializable {
 				return false;
 		} else if (!reciever.equals(other.reciever))
 			return false;
-		if (sender == null) {
-			if (other.sender != null)
-				return false;
-		} else if (!sender.equals(other.sender))
-			return false;
 		if (sentDate == null) {
 			if (other.sentDate != null)
 				return false;
@@ -116,7 +102,12 @@ public class Notification implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Notification [id=" + id + ", sender=" + sender + ", reciever=" + reciever + ", message=" + message
-				+ ", sentDate=" + sentDate + "]";
+		return "Notification [id=" + id + ", reciever=" + reciever + ", message=" + message + ", sentDate=" + sentDate
+				+ "]";
 	}
+	
+	
+	
 }
+
+

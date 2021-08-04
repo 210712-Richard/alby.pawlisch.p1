@@ -25,10 +25,10 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public void addUser(User user) {
-		String query = "Insert into user (username, email, type, supervisor, dephead) values (?, ?, ?, ?, ?);";
+		String query = "Insert into user (username, email, type, supervisor, dephead, inbox) values (?, ?, ?, ?, ?, ?);";
 		SimpleStatement s = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
 		BoundStatement bound = session.prepare(s)
-				.bind(user.getUsername(), user.getEmail(), user.getType().toString(), user.getSupervisor(), user.getDephead());
+				.bind(user.getUsername(), user.getEmail(), user.getType().toString(), user.getSupervisor(), user.getDephead(), user.getInbox());
 		session.execute(bound);
 	}
 	
@@ -94,7 +94,7 @@ public class UserDaoImpl implements UserDao {
 	public List<Notification> getUserInbox(String username) {
 		
 		List<Notification> notifs = new ArrayList<Notification>();
-		String query = "Select id, sender, receiver, message, sentDate from receivednotif where receiver=?";
+		String query = "Select id, receiver, message, sentDate from receivednotif where receiver=?";
 		SimpleStatement simple = new SimpleStatementBuilder(query).build();
 		BoundStatement bound = session.prepare(simple).bind(username);
 		
@@ -103,7 +103,6 @@ public class UserDaoImpl implements UserDao {
 		resultSet.forEach(row -> {
 			Notification notif = new Notification();
 			notif.setId(row.getUuid("id"));
-			notif.setSender(row.getString("sender"));
 			notif.setReciever(row.getString("receiver"));
 			notif.setMessage(row.getString("message"));
 			notif.setSentDate(row.getLocalDate("sentDate"));

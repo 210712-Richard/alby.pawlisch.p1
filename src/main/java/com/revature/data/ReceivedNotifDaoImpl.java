@@ -23,10 +23,10 @@ public class ReceivedNotifDaoImpl implements ReceivedNotifDao {
 	
 	@Override
 	public void addNotif(Notification notif) {
-		String query = "Insert into receivednotif (sender, receiver, message, sentDate) values (?, ?, ?, ?);";
+		String query = "Insert into receivednotif (receiver, message, sentDate) values (?, ?, ?);";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
 		BoundStatement bound = session.prepare(simple)
-				.bind(notif.getSender(), notif.getReciever(), notif.getMessage(), notif.getSentDate());
+				.bind(notif.getReciever(), notif.getMessage(), notif.getSentDate());
 		session.execute(bound);
 		
 	}
@@ -34,13 +34,12 @@ public class ReceivedNotifDaoImpl implements ReceivedNotifDao {
 	@Override
 	public List<Notification> getNotifs() {
 		List<Notification> notifs = new ArrayList<Notification>();
-		String query = "Select id, sender, reciever, message, sentDate from receivednotif";
+		String query = "Select id, reciever, message, sentDate from receivednotif";
 		ResultSet resultSet = session.execute(new SimpleStatementBuilder(query).build());
 		
 		resultSet.forEach(row -> {
 			Notification notif = new Notification();
 			notif.setId(row.getUuid("id"));
-			notif.setSender(row.getString("sender"));
 			notif.setReciever(row.getString("receiver"));
 			notif.setMessage(row.getString("message"));
 			notif.setSentDate(row.getLocalDate("sentdate"));
@@ -54,7 +53,7 @@ public class ReceivedNotifDaoImpl implements ReceivedNotifDao {
 	
 	@Override
 	public Notification getNotifById(UUID id) {
-		String query = "Select id, sender, reciever, message, sentDate from receivednotif where id = ?";
+		String query = "Select id, reciever, message, sentDate from receivednotif where id = ?";
 		BoundStatement bound = session.prepare(new SimpleStatementBuilder(query).build()).bind(id);
 		ResultSet resultSet = session.execute(bound);
 		
@@ -64,7 +63,6 @@ public class ReceivedNotifDaoImpl implements ReceivedNotifDao {
 		}
 		Notification notif = new Notification();
 		notif.setId(row.getUuid("id"));
-		notif.setSender(row.getString("sender"));
 		notif.setReciever(row.getString("receiver"));
 		notif.setMessage(row.getString("message"));
 		notif.setSentDate(row.getLocalDate("sentdate"));

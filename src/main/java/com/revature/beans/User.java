@@ -40,6 +40,7 @@ public class User implements Serializable {
 		this.email = email;
 		this.supervisor = supervisor;
 		this.dephead = dephead;
+		this.inbox = new ArrayList<Notification>();
 	}
 	
 	public User(String username, String email, String dephead) {
@@ -49,6 +50,19 @@ public class User implements Serializable {
 		this.email = email;
 		this.supervisor = null;
 		this.dephead = dephead;
+		this.inbox = new ArrayList<Notification>();
+	}
+
+
+
+	public User(String username, String email) {
+		// Make CEO
+		this();
+		this.username = username;
+		this.email = email;
+		this.supervisor = null;
+		this.dephead = null;
+		this.inbox = new ArrayList<Notification>();
 	}
 
 
