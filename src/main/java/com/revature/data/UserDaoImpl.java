@@ -99,6 +99,7 @@ public class UserDaoImpl implements UserDao {
 		BoundStatement bound = session.prepare(simple).bind(username);
 		
 		ResultSet resultSet = session.execute(bound);
+		
 		resultSet.forEach(row -> {
 			Notification notif = new Notification();
 			notif.setId(row.getUuid("id"));
@@ -113,5 +114,7 @@ public class UserDaoImpl implements UserDao {
 		return notifs;
 		
 	}
+
+	
 
 }

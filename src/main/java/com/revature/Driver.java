@@ -14,24 +14,14 @@ import io.javalin.plugin.json.JavalinJackson;
 public class Driver {
 	public static void main(String[] args) {
 		
-		//dbtest();
-		//dbtestBoogaloo();
+		//DataBaseCreator.dropTables();
+		//DataBaseCreator.createTables();
+		//DataBaseCreator.populateUserTable();
 		//instantiateDatabase();
 		javalin();
 		
 	}
 	
-	private static void dbtestBoogaloo() {
-		StringBuilder sb = new StringBuilder("DROP TABLE IF EXISTS Test;");
-		CassandraUtil.getInstance().getSession().execute(sb.toString());
-	}
-	
-	private static void dbtest() {
-		StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS Test(")
-				.append("username text PRIMARY KEY, type text, id int, currency varint, ")
-				.append("birthday date, lastCheckIn date, email text );");
-		CassandraUtil.getInstance().getSession().execute(sb.toString());
-	}
 	
 	public static void instantiateDatabase() {
 		DataBaseCreator.dropTables();

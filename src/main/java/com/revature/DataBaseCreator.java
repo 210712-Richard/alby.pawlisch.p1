@@ -29,7 +29,7 @@ public class DataBaseCreator {
 		
 		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS ReceivedNotif (")
 				.append("sender text, receiver text, id uuid, message text, sentDate date, ")
-				.append("primary key (id, receiver));");
+				.append("primary key (receiver, id));");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 	}
 	
