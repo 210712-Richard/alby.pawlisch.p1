@@ -40,6 +40,30 @@ public class Reimbursement implements Serializable {
 		this.approvedAmount = approvedAmount;
 	}
 	
+	public Reimbursement(String employee, String reimburseForm, String approvedEmail, LocalDate submissionDate,
+			LocalDate lastApprovalDate, Boolean superApproval, Boolean headApproval, Boolean bencoApproval,
+			Boolean urgent, Long requestAmount, Long approvedAmount) {
+		this();
+		this.employee = employee;
+		this.reimburseForm = reimburseForm;
+		this.approvedEmail = approvedEmail;
+		this.submissionDate = submissionDate;
+		this.lastApprovalDate = lastApprovalDate;
+		this.superApproval = superApproval;
+		this.headApproval = headApproval;
+		this.bencoApproval = bencoApproval;
+		this.urgent = urgent;
+		this.requestAmount = requestAmount;
+		this.approvedAmount = approvedAmount;
+	}
+	
+	public Reimbursement(String employee, String reimburseForm, UUID id) {
+		this();
+		this.employee = employee;
+		this.reimburseForm = reimburseForm;
+		this.id = id;
+	}
+	
 	
 	
 	public UUID getId() {
