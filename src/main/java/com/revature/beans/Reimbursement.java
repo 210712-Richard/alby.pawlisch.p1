@@ -18,6 +18,29 @@ public class Reimbursement implements Serializable {
 	private Long requestAmount;
 	private Long approvedAmount;
 	
+	public Reimbursement() {
+		super();
+	}
+	
+	public Reimbursement(UUID id, String employee, String reimburseForm, String approvedEmail, LocalDate submissionDate,
+			LocalDate lastApprovalDate, Boolean superApproval, Boolean headApproval, Boolean bencoApproval,
+			Boolean urgent, Long requestAmount, Long approvedAmount) {
+		this();
+		this.id = id;
+		this.employee = employee;
+		this.reimburseForm = reimburseForm;
+		this.approvedEmail = approvedEmail;
+		this.submissionDate = submissionDate;
+		this.lastApprovalDate = lastApprovalDate;
+		this.superApproval = superApproval;
+		this.headApproval = headApproval;
+		this.bencoApproval = bencoApproval;
+		this.urgent = urgent;
+		this.requestAmount = requestAmount;
+		this.approvedAmount = approvedAmount;
+	}
+	
+	
 	
 	public UUID getId() {
 		return id;
@@ -192,6 +215,10 @@ public class Reimbursement implements Serializable {
 				+ ", bencoApproval=" + bencoApproval + ", urgent=" + urgent + ", requestAmount=" + requestAmount
 				+ ", approvedAmount=" + approvedAmount + "]";
 	}
+
+
+
+	
 	
 	
 	
