@@ -39,7 +39,7 @@ public class DataBaseCreator {
 				.append("submissionDate date, lastApprovalDate date, superApproval boolean, ")
 				.append("headApproval boolean, bencoApproval boolean, urgent Boolean, ")
 				.append("requestAmount bigint, approvedAmount bigint, ")
-				.append("primary key(employee, urgent, id));");
+				.append("primary key(employee, id, urgent));");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 	}

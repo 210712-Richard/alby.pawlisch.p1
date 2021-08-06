@@ -25,14 +25,15 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 	@Override
 	public void addReimbursement(Reimbursement reimbursement) {
 		
-		StringBuilder bigQuery = new StringBuilder ("Insert into reimbursement (employee, reimburseForm, approvedEmail, ")
+		StringBuilder bigQuery = new StringBuilder ("Insert into reimbursement (id, employee, reimburseForm, approvedEmail, ")
 				.append("submissionDate, lastApprovalDate, superApproval, headApproval, ")
 				.append("bencoApproval, urgent, requestAmount, approvedAmount) ")
-				.append("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				.append("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		String query = bigQuery.toString();
+		UUID id = UUID.randomUUID();
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
 		BoundStatement bound = session.prepare(simple)
-				.bind(reimbursement.getEmployee(), reimbursement.getReimburseForm(), reimbursement.getApprovedEmail(),
+				.bind(id, reimbursement.getEmployee(), reimbursement.getReimburseForm(), reimbursement.getApprovedEmail(),
 						reimbursement.getSubmissionDate(), reimbursement.getLastApprovalDate(), reimbursement.getSuperApproval(),
 						reimbursement.getHeadApproval(), reimbursement.getBencoApproval(), reimbursement.getUrgent(),
 						reimbursement.getRequestAmount(), reimbursement.getApprovedAmount());
@@ -81,10 +82,11 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 		return available;
 	}
 	
-	public Reimbursement getReimbursementById(UUID id) {
-		String query = "Select * from reimbursement where id = ?";
+	@Override
+	public Reimbursement getReimbursementById(UUID id, String employee) {
+		String query = "Select * from reimbursement where employee = ?, id = ?";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
-		BoundStatement bound = session.prepare(simple).bind(id);
+		BoundStatement bound = session.prepare(simple).bind(employee, id);
 		ResultSet results = session.execute(bound);
 		Row row = results.one();
 		if (row == null) {
@@ -106,6 +108,8 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 		return reimbursement;
 		
 	}
+	
+	
 	
 
 }

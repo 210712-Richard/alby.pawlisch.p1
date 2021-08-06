@@ -37,8 +37,20 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 			return;
 		}
 		
-		String formName = employee + "Reimbursement";
+		Integer reimburseCount = reimburseService.reimbursementCount(employee);
+		String formName;
+		Integer reimburseNumber = reimburseCount + 2;
+		
+		if(reimburseCount == 0) {
+			formName = employee + "Reimbursement";
+		} else {
+			
+			formName = employee + "Reimbursement" + reimburseNumber;
+		}
+		
+		
 		String key = formName+"."+filetype;
+		
 		S3Util.getInstance().uploadToBucket(key, ctx.bodyAsBytes());
 		
 		Reimbursement newReimbursement = reimburseService.apply(formName, employee, requestAmount);

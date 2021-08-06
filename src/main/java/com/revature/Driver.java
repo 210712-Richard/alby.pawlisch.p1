@@ -16,9 +16,6 @@ import io.javalin.plugin.json.JavalinJackson;
 public class Driver {
 	public static void main(String[] args) {
 		
-		//DataBaseCreator.dropTables();
-		//DataBaseCreator.createTables();
-		//DataBaseCreator.populateUserTable();
 		//instantiateDatabase();
 		javalin();
 		
@@ -28,13 +25,13 @@ public class Driver {
 	public static void instantiateDatabase() {
 		DataBaseCreator.dropTables();
 		try {
-			Thread.sleep(20000); // wait 20 seconds
+			Thread.sleep(30000); 
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		DataBaseCreator.createTables();
 		try {
-			Thread.sleep(10000); // wait 10 seconds
+			Thread.sleep(30000); 
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,9 +29,9 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		reimburse.setApprovedEmail(null);
 		reimburse.setSubmissionDate(LocalDate.now());
 		reimburse.setLastApprovalDate(null);
-		reimburse.setSuperApproval(false);
-		reimburse.setHeadApproval(false);
-		reimburse.setBencoApproval(false);
+		reimburse.setSuperApproval(null);
+		reimburse.setHeadApproval(null);
+		reimburse.setBencoApproval(null);
 		// WORK OUT URGENT STUFF LATER
 		reimburse.setUrgent(false);
 		reimburse.setRequestAmount(requestAmount);
@@ -47,6 +48,21 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		
 		// GET RID OF THE RETURN NULL LATER
 		return null;
+	}
+	
+	@Override
+	public Boolean filenameCheck(String key) {
+		Boolean available = reimburseDao.checkFileNameAvailability(key);
+		return available;
+	}
+	
+	@Override
+	public Integer reimbursementCount(String employee) {
+		
+		List<Reimbursement> list = reimburseDao.getEmployeeReimbursements(employee);
+		
+		Integer count = list.size();
+		return count;
 	}
 	
 }

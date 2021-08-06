@@ -8,4 +8,8 @@ public interface ReimbursementService {
 
 	Reimbursement emailApprove();
 
+	Boolean filenameCheck(String key);
+
+	Integer reimbursementCount(String employee);
+
 }
