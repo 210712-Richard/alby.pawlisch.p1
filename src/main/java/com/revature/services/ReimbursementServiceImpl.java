@@ -2,6 +2,7 @@ package com.revature.services;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +38,8 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		reimburse.setRequestAmount(requestAmount);
 		reimburse.setApprovedAmount(null);
 		
+		reimburseDao.addReimbursement(reimburse);
+		
 		return reimburse;
 		
 	}
@@ -51,18 +54,15 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 	}
 	
 	@Override
-	public Boolean filenameCheck(String key) {
-		Boolean available = reimburseDao.checkFileNameAvailability(key);
-		return available;
+	public List<Reimbursement> viewReimbursementsFromEmployee(String employee) {
+		List<Reimbursement> list = reimburseDao.getEmployeeReimbursements(employee);
+		return list;
 	}
 	
 	@Override
-	public Integer reimbursementCount(String employee) {
-		
-		List<Reimbursement> list = reimburseDao.getEmployeeReimbursements(employee);
-		
-		Integer count = list.size();
-		return count;
+	public Reimbursement viewOneReimbursement(UUID id, String employee) {
+		Reimbursement reimbursement = reimburseDao.getReimbursementById(id, employee);
+		return reimbursement;
 	}
 	
 }

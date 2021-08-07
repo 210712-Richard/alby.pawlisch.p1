@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class User implements Serializable {
-	private UUID id;
 	private String username;
 	private String email;
 	private UserType type;
@@ -24,7 +23,6 @@ public class User implements Serializable {
 	
 	public User(UUID id, String username, String email, UserType type, List<Notification> inbox) {
 		this();
-		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.type = type;
@@ -67,12 +65,6 @@ public class User implements Serializable {
 
 
 
-	public UUID getId() {
-		return id;
-	}
-	public void setId(UUID id) {
-		this.id = id;
-	}
 	
 	public String getUsername() {
 		return username;
@@ -121,7 +113,6 @@ public class User implements Serializable {
 		int result = 1;
 		result = prime * result + ((dephead == null) ? 0 : dephead.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((inbox == null) ? 0 : inbox.hashCode());
 		result = prime * result + ((supervisor == null) ? 0 : supervisor.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
@@ -150,11 +141,6 @@ public class User implements Serializable {
 				return false;
 		} else if (!email.equals(other.email))
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
 		if (inbox == null) {
 			if (other.inbox != null)
 				return false;
@@ -179,14 +165,8 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", email=" + email + ", type=" + type + ", inbox=" + inbox
+		return "User [username=" + username + ", email=" + email + ", type=" + type + ", inbox=" + inbox
 				+ ", supervisor=" + supervisor + ", dephead=" + dephead + "]";
 	}
-	
-	
-	
-	
-	
+
 }
-	
-	

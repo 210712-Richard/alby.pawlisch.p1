@@ -1,5 +1,8 @@
 package com.revature.services;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.revature.beans.Reimbursement;
 
 public interface ReimbursementService {
@@ -8,8 +11,9 @@ public interface ReimbursementService {
 
 	Reimbursement emailApprove();
 
-	Boolean filenameCheck(String key);
+	List<Reimbursement> viewReimbursementsFromEmployee(String employee);
 
-	Integer reimbursementCount(String employee);
+	Reimbursement viewOneReimbursement(UUID id, String employee);
+
 
 }

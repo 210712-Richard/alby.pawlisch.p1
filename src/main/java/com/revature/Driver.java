@@ -17,6 +17,9 @@ public class Driver {
 	public static void main(String[] args) {
 		
 		//instantiateDatabase();
+		//DataBaseCreator.dropTables();
+		//DataBaseCreator.createTables();
+		//DataBaseCreator.populateUserTable();
 		javalin();
 		
 	}
@@ -55,19 +58,26 @@ public class Driver {
 		app.get("/", (ctx)->ctx.html("Hello Project 1"));
 		
 		// login
-		app.post("/users", userControl::login);
+		app.post("/login", userControl::login);
 		
 		// logout
-		app.delete("/users", userControl::logout);
+		app.delete("/login", userControl::logout);
 		
 		// check inbox
-		app.get("/users/inbox", userControl::inbox);
+		app.get("/inbox", userControl::inbox);
 		
 		// submit file
 		// put requested amount into Reimburse-Amount header
 		// file into body - binary
 		// put extension name into Extension header
-		app.put("/users/reimbursement", reimbursementControl::addReimbursement);
+		app.put("/reimbursement", reimbursementControl::addReimbursement);
+
+		// get reimbursements from a specific employee
+		app.get("/reimbursement/:employee", reimbursementControl::getEmployeeReimbursements);
+
+		// get a specific reimbursement
+		app.get("/reimbursement/:employee/:reimburseId", reimbursementControl::getEmployeeReimbursements);
+		
 
 	}
 	

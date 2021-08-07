@@ -15,7 +15,6 @@ import com.revature.factory.Log;
 import com.revature.util.CassandraUtil;
 import com.revature.beans.Reimbursement;
 
-import io.javalin.http.Context;
 
 @Log
 public class ReimbursementDaoImpl implements ReimbursementDao {
@@ -24,12 +23,9 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 	
 	@Override
 	public void addReimbursement(Reimbursement reimbursement) {
-		
-		StringBuilder bigQuery = new StringBuilder ("Insert into reimbursement (id, employee, reimburseForm, approvedEmail, ")
-				.append("submissionDate, lastApprovalDate, superApproval, headApproval, ")
-				.append("bencoApproval, urgent, requestAmount, approvedAmount) ")
-				.append("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		String query = bigQuery.toString();
+		String query = "Insert into reimbursement (id, employee, reimburseForm, approvedEmail, "
+				+ "submissionDate, lastApprovalDate, superApproval, headApproval, bencoApproval, urgent, requestAmount, approvedAmount) "
+				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		UUID id = UUID.randomUUID();
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
 		BoundStatement bound = session.prepare(simple)
@@ -63,24 +59,6 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 		
 	}
 	
-	@Override
-	public Boolean checkFileNameAvailability(String key) {
-		Boolean available;
-		
-		String query = "Select employee, reimburseForm, id from reimbursement where reimburseForm = ?";
-		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
-		BoundStatement bound = session.prepare(simple).bind(key);
-		ResultSet results = session.execute(bound);
-		Row row = results.one();
-		if(row == null) {
-			available = true;
-			
-		} else {
-			available = false;
-		}
-		
-		return available;
-	}
 	
 	@Override
 	public Reimbursement getReimbursementById(UUID id, String employee) {

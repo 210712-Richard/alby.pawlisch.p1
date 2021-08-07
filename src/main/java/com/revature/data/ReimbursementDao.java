@@ -13,9 +13,8 @@ public interface ReimbursementDao {
 
 	List<Reimbursement> getEmployeeReimbursements(String employeeName);
 
-	Boolean checkFileNameAvailability(String key);
-
 	Reimbursement getReimbursementById(UUID id, String employee);
+	
 
 
 }

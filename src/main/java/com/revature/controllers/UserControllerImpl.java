@@ -27,7 +27,7 @@ public class UserControllerImpl implements UserController {
 		User user = ctx.bodyAsClass(User.class);
 		log.debug(user);
 		
-		user = userService.login(user.getUsername());
+		user = userService.getUser(user.getUsername());
 		log.debug(user);
 		
 		if(user != null) {

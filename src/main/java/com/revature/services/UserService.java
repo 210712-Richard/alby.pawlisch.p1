@@ -7,9 +7,12 @@ import com.revature.beans.User;
 
 public interface UserService {
 
-	User login(String username);
+	User getUser(String username);
 
 	List<Notification> getInbox(String username);
+
+	Boolean allowedAccess(String username, String employee);
+
 	
 
 }

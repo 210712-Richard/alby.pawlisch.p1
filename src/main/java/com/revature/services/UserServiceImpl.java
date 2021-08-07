@@ -19,13 +19,13 @@ import com.revature.factory.Log;
 @Log
 public class UserServiceImpl implements UserService{
 	
-	private Logger log = LogManager.getLogger(UserServiceImpl.class);
 	public UserDao userDao = (UserDao) BeanFactory.getFactory().get(UserDao.class, UserDaoImpl.class);
-
+	
 	public ReceivedNotifDao receivedNotifDao = (ReceivedNotifDao) BeanFactory.getFactory().get(ReceivedNotifDao.class, ReceivedNotifDaoImpl.class);
 
+
 	@Override
-	public User login(String username) {
+	public User getUser(String username) {
 		User user = userDao.getUser(username);
 		
 		return user;
@@ -36,6 +36,36 @@ public class UserServiceImpl implements UserService{
 	public List<Notification> getInbox(String username){
 		List<Notification> inbox = userDao.getUserInbox(username);
 		return inbox;
+		
+	}
+	
+	@Override
+	public Boolean allowedAccess(String username, String employee) {
+		User checkEmployee = userDao.getUser(employee);
+		
+		Boolean isDephead;
+		if(checkEmployee.getDephead() == username) {
+			isDephead = true;
+		} else {
+			isDephead = false;
+		}
+		
+		Boolean isSupervisor;
+		if(checkEmployee.getSupervisor() == username) {
+			isSupervisor = true;
+		} else {
+			isSupervisor = false;
+		}
+		
+		Boolean allowed;
+		if(isDephead.equals(true) || isSupervisor.equals(true)) {
+			allowed = true;
+			return allowed;
+		} else {
+			allowed = false;
+		}
+		
+		return allowed;
 		
 	}
 

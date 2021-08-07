@@ -6,4 +6,8 @@ public interface ReimbursementController {
 
 	void addReimbursement(Context ctx);
 
+	void getOneReimbursement(Context ctx);
+
+	void getEmployeeReimbursements(Context ctx);
+
 }

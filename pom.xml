@@ -25,16 +25,12 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
 			<version>5.7.2</version>
-			<!-- Should this dependency be included in the artifacts (jar) that Maven 
-				creates -->
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-runner</artifactId>
 			<version>1.7.2</version>
-			<!-- Should this dependency be included in the artifacts (jar) that Maven 
-				creates -->
 			<scope>test</scope>
 		</dependency>
 		<dependency>
