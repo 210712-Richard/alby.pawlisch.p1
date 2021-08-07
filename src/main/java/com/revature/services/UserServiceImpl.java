@@ -44,14 +44,14 @@ public class UserServiceImpl implements UserService{
 		User checkEmployee = userDao.getUser(employee);
 		
 		Boolean isDephead;
-		if(checkEmployee.getDephead() == username) {
+		if(username.equals(checkEmployee.getDephead())) {
 			isDephead = true;
 		} else {
 			isDephead = false;
 		}
 		
 		Boolean isSupervisor;
-		if(checkEmployee.getSupervisor() == username) {
+		if(username.equals(checkEmployee.getSupervisor())) {
 			isSupervisor = true;
 		} else {
 			isSupervisor = false;

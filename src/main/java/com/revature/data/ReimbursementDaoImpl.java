@@ -39,7 +39,7 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 	
 	@Override
 	public List<Reimbursement> getEmployeeReimbursements(String employeeName) {
-		String query = "Select employee, reimburseForm, id from reimbursement where employee = ?";
+		String query = "Select * from reimbursement where employee = ?";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
 		BoundStatement bound = session.prepare(simple).bind(employeeName);
 		ResultSet results = session.execute(bound);
@@ -47,9 +47,18 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 		List<Reimbursement> reimbursements = new ArrayList<>();
 		results.forEach(row ->{
 			Reimbursement reimbursement = new Reimbursement();
+			reimbursement.setId(row.getUuid("id"));
 			reimbursement.setEmployee(row.getString("employee"));
 			reimbursement.setReimburseForm(row.getString("reimburseForm"));
-			reimbursement.setId(row.getUuid("id"));
+			reimbursement.setApprovedEmail(row.getString("approvedEmail"));
+			reimbursement.setSubmissionDate(row.getLocalDate("submissionDate"));
+			reimbursement.setLastApprovalDate(row.getLocalDate("lastApprovalDate"));
+			reimbursement.setSuperApproval(row.getBoolean("superApproval"));
+			reimbursement.setHeadApproval(row.getBoolean("headApproval"));
+			reimbursement.setBencoApproval(row.getBoolean("bencoApproval"));
+			reimbursement.setUrgent(row.getBoolean("urgent"));
+			reimbursement.setRequestAmount(row.getLong("requestAmount"));
+			reimbursement.setApprovedAmount(row.getLong("approvedAmount"));
 			
 			reimbursements.add(reimbursement);
 			
@@ -62,7 +71,7 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 	
 	@Override
 	public Reimbursement getReimbursementById(UUID id, String employee) {
-		String query = "Select * from reimbursement where employee = ?, id = ?";
+		String query = "Select * from reimbursement where employee = ? and id = ?";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
 		BoundStatement bound = session.prepare(simple).bind(employee, id);
 		ResultSet results = session.execute(bound);
@@ -71,6 +80,7 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 			return null;
 		}
 		Reimbursement reimbursement = new Reimbursement();
+		reimbursement.setId(row.getUuid("id"));
 		reimbursement.setEmployee(row.getString("employee"));
 		reimbursement.setReimburseForm(row.getString("reimburseForm"));
 		reimbursement.setApprovedEmail(row.getString("approvedEmail"));
@@ -85,6 +95,18 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 		
 		return reimbursement;
 		
+	}
+	
+	@Override
+	public void deleteReimbursement(UUID id, String employee) {
+		String query = "Delete from reimbursement where employee = ? and id = ?";
+		BoundStatement bound = session
+				.prepare(new SimpleStatementBuilder(query)
+				.setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
+				.build())
+				.bind(employee, id);
+		session.execute(bound);
+
 	}
 	
 	

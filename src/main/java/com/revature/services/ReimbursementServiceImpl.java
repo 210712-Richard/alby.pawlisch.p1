@@ -65,4 +65,9 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		return reimbursement;
 	}
 	
+	@Override
+	public void deleteReimbursement(UUID id, String employee) {
+		reimburseDao.deleteReimbursement(id, employee);
+	}
+	
 }

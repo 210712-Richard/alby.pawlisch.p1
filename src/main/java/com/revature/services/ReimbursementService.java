@@ -15,5 +15,7 @@ public interface ReimbursementService {
 
 	Reimbursement viewOneReimbursement(UUID id, String employee);
 
+	void deleteReimbursement(UUID id, String employee);
+
 
 }

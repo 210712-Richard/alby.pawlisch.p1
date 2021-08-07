@@ -76,7 +76,13 @@ public class Driver {
 		app.get("/reimbursement/:employee", reimbursementControl::getEmployeeReimbursements);
 
 		// get a specific reimbursement
-		app.get("/reimbursement/:employee/:reimburseId", reimbursementControl::getEmployeeReimbursements);
+		app.get("/reimbursement/:employee/:reimburseId", reimbursementControl::getOneReimbursement);
+		
+		// delete a reimbursement
+		app.delete("/reimbursement/:employee/:reimburseId", reimbursementControl::deleteReimbursement);
+		
+		// get a form
+		app.get("/reimbursement/download/:employee/:reimburseId", reimbursementControl::getForm);
 		
 
 	}

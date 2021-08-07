@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.revature.beans.Reimbursement;
 import com.revature.beans.User;
-import com.revature.beans.Reimbursement;
 import com.revature.factory.BeanFactory;
 import com.revature.factory.Log;
 import com.revature.services.ReimbursementService;
@@ -45,13 +44,12 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 			return;
 		}
 		
-		
 		String formName = employee + "Reimbursement";
-		String key = formName+"."+filetype;
+		String key = formName + "." + filetype;
 		
 		S3Util.getInstance().uploadToBucket(key, ctx.bodyAsBytes());
 		
-		Reimbursement newReimbursement = reimburseService.apply(formName, employee, requestAmount);
+		Reimbursement newReimbursement = reimburseService.apply(key, employee, requestAmount);
 		
 		if(newReimbursement != null) {
 			ctx.status(201);
@@ -84,12 +82,6 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		
 		if(loggedUsername.equals(reimbursement.getEmployee()) || allowedAccess == true){
 			ctx.json(reimbursement);
-			try {
-				InputStream form = S3Util.getInstance().getObject(reimbursement.getReimburseForm());
-				ctx.result(form);
-			} catch (Exception e) {
-				ctx.status(500);
-			}
 		} else {
 			ctx.status(403);
 		}
@@ -119,5 +111,52 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 			ctx.status(403);
 		}
 	}
+	
+	@Override
+	public void getForm(Context ctx) {
+		User loggedUser = ctx.sessionAttribute("loggedUser");
+		
+		String employee = ctx.pathParam("employee");
+		UUID reimburseId = UUID.fromString(ctx.pathParam("reimburseId"));
+		String loggedUsername = loggedUser.getUsername();
+		
+		
+		Reimbursement reimbursement = reimburseService.viewOneReimbursement(reimburseId, employee);
+		Boolean allowedAccess = userService.allowedAccess(loggedUsername, employee);
+		if(employee == null) {
+			ctx.status(404);
+			ctx.html("Employee does not exist");
+		}
+		if(reimbursement == null) {
+			ctx.status(404);
+			ctx.html("Reimbursement does not exist.");
+		}
+		
+		if(loggedUsername.equals(employee) || allowedAccess.equals(true)){
+			try {
+				InputStream form = S3Util.getInstance().getObject(reimbursement.getReimburseForm());
+				ctx.result(form);
+			} catch (Exception e) {
+				ctx.status(500);
+			}
+		} else {
+			ctx.status(403);
+		}
+	}
+	
+	@Override
+	public void deleteReimbursement(Context ctx) {
+		User loggedUser = ctx.sessionAttribute("loggedUser");
+		
+		String employee = ctx.pathParam("employee");
+		UUID reimburseId = UUID.fromString(ctx.pathParam("reimburseId"));
+		
+		if(employee.equals(loggedUser.getUsername())){
+			reimburseService.deleteReimbursement(reimburseId, employee);
+		} else {
+			ctx.status(403);
+		}
+	}
+	
 
 }

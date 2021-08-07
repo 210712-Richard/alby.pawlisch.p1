@@ -14,6 +14,8 @@ public interface ReimbursementDao {
 	List<Reimbursement> getEmployeeReimbursements(String employeeName);
 
 	Reimbursement getReimbursementById(UUID id, String employee);
+
+	void deleteReimbursement(UUID id, String employee);
 	
 
 
