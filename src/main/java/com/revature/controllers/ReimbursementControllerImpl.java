@@ -30,6 +30,8 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 	
 	@Override
 	public void addReimbursement(Context ctx) {
+		log.trace("AddReimbursement method called");
+		log.debug(ctx.body());
 		User loggedUser = ctx.sessionAttribute("loggedUser");
 		
 		// LATER
@@ -62,6 +64,9 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 	
 	@Override
 	public void getOneReimbursement(Context ctx) {
+		log.trace("Called getOneReimbursement");
+		log.debug("Attempting to view reimbursement: " + ctx.pathParam("reimburseId"));
+		
 		User loggedUser = ctx.sessionAttribute("loggedUser");
 		
 		String employee = ctx.pathParam("employee");
@@ -91,6 +96,10 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 	
 	@Override
 	public void getEmployeeReimbursements(Context ctx) {
+		log.trace("Called getEmployeeReimbursements");
+		log.debug("Viewing reimbursements from: " + ctx.pathParam("employee"));
+		
+		
 		User loggedUser = ctx.sessionAttribute("loggedUser");
 		
 		String employee = ctx.pathParam("employee");
@@ -114,6 +123,9 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 	
 	@Override
 	public void getForm(Context ctx) {
+		log.trace("Called getForm");
+		log.debug("Attempting to get reimbursement form: " + ctx.pathParam("reimburseId"));
+		
 		User loggedUser = ctx.sessionAttribute("loggedUser");
 		
 		String employee = ctx.pathParam("employee");
@@ -146,6 +158,9 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 	
 	@Override
 	public void deleteReimbursement(Context ctx) {
+		log.trace("Called deleteReimbursement");
+		log.debug("Deleting a reimbursement from: " + ctx.pathParam("employee"));
+		
 		User loggedUser = ctx.sessionAttribute("loggedUser");
 		
 		String employee = ctx.pathParam("employee");

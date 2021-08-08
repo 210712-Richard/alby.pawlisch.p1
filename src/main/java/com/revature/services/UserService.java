@@ -11,6 +11,12 @@ public interface UserService {
 
 	List<Notification> getInbox(String username);
 
+	Boolean isDephead(String username, String employee);
+
+	Boolean isSupervisor(String username, String employee);
+
+	Boolean isBenco(String username);
+	
 	Boolean allowedAccess(String username, String employee);
 
 	

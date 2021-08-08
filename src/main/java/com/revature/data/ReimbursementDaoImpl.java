@@ -109,6 +109,43 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 
 	}
 	
+	@Override
+	public void updateEmail(Reimbursement reimbursement) {
+		// changes/adds approved email
+		// sets superApproval to True
+		String query = "update reimbursement set approvedEmail = ?, superApproval = ? where employee =? and id=?;";
+		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
+				.build();
+	}
+	
+	@Override
+	public void updateSuperApproval(Reimbursement reimbursement) {
+		// sets superApproval
+		// sets lastApprovalDate
+		String query = "update reimbursement set superApproval = ?, lastApprovalDate = ? where employee =? and id=?;";
+		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
+				.build();
+	}
+	
+	@Override
+	public void updateDepheadApproval(Reimbursement reimbursement) {
+		// sets headApproval
+		// sets lastApprovalDate
+		String query = "update reimbursement set headApproval = ?, lastApprovalDate = ? where employee =? and id=?;";
+		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
+				.build();
+	}
+	
+	@Override
+	public void updateBencoApproval(Reimbursement reimbursement) {
+		// sets bencoApproval
+		// sets lastApprovalDate
+		// sets approvedAmount
+		String query = "update reimbursement set bencoApproval = ?, lastApprovalDate = ?, approvedAmount = ? where employee =? and id=?;";
+		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
+				.build();
+	}
+	
 	
 	
 

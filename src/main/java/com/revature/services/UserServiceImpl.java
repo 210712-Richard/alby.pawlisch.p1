@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.revature.beans.Notification;
 import com.revature.beans.User;
+import com.revature.beans.UserType;
 import com.revature.data.ReceivedNotifDao;
 import com.revature.data.ReceivedNotifDaoImpl;
 import com.revature.data.UserDao;
@@ -39,8 +40,8 @@ public class UserServiceImpl implements UserService{
 		
 	}
 	
-	@Override
-	public Boolean allowedAccess(String username, String employee) {
+	@Override 
+	public Boolean isDephead(String username, String employee) {
 		User checkEmployee = userDao.getUser(employee);
 		
 		Boolean isDephead;
@@ -50,15 +51,47 @@ public class UserServiceImpl implements UserService{
 			isDephead = false;
 		}
 		
+		return isDephead;
+	}
+	
+	@Override
+	public Boolean isSupervisor(String username, String employee) {
+		User checkEmployee = userDao.getUser(employee);
+		
 		Boolean isSupervisor;
 		if(username.equals(checkEmployee.getSupervisor())) {
 			isSupervisor = true;
 		} else {
 			isSupervisor = false;
 		}
+		return isSupervisor;
+	}
+	
+	@Override
+	public Boolean isBenco(String username) {
+		User user = userDao.getUser(username);
+		
+		Boolean isBenco;
+		if(user.getType() != UserType.BENCO) {
+			isBenco = true;
+		} else {
+			isBenco = false;
+		}
+		
+		return isBenco;
+	}
+	
+	@Override
+	public Boolean allowedAccess(String username, String employee) {
+		
+		Boolean isDephead = isDephead(username, employee);
+		
+		Boolean isSupervisor = isSupervisor(username, employee);
+		
+		Boolean isBenco = isBenco(username);
 		
 		Boolean allowed;
-		if(isDephead.equals(true) || isSupervisor.equals(true)) {
+		if(isDephead.equals(true) || isSupervisor.equals(true) || isBenco.equals(true)) {
 			allowed = true;
 			return allowed;
 		} else {
