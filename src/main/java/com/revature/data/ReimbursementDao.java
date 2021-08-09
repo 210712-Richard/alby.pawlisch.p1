@@ -16,6 +16,14 @@ public interface ReimbursementDao {
 	Reimbursement getReimbursementById(UUID id, String employee);
 
 	void deleteReimbursement(UUID id, String employee);
+
+	void updateEmail(Reimbursement reimbursement);
+
+	void updateSuperApproval(Reimbursement reimbursement);
+
+	void updateDepheadApproval(Reimbursement reimbursement);
+
+	void updateBencoApproval(Reimbursement reimbursement);
 	
 
 

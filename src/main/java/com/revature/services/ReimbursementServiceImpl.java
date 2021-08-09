@@ -38,19 +38,13 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		reimburse.setRequestAmount(requestAmount);
 		reimburse.setApprovedAmount(null);
 		
+		log.trace("Called apply method in Service");
+		log.debug(reimburse);
+		
 		reimburseDao.addReimbursement(reimburse);
 		
 		return reimburse;
 		
-	}
-	
-	@Override
-	public Reimbursement emailApprove() {
-		// users can do this after they submit a form
-		
-		
-		// GET RID OF THE RETURN NULL LATER
-		return null;
 	}
 	
 	@Override
@@ -69,5 +63,29 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 	public void deleteReimbursement(UUID id, String employee) {
 		reimburseDao.deleteReimbursement(id, employee);
 	}
+	
+	@Override
+	public void emailApprove(Reimbursement reimbursement) {
+		// users can do this after they submit a form
+		// actual email is sent in controller
+		reimburseDao.updateEmail(reimbursement);
+		
+	}
+	
+	@Override
+	public void updateSuperApproval(Reimbursement reimbursement) {
+		reimburseDao.updateSuperApproval(reimbursement);
+	}
+	
+	@Override
+	public void updateDepheadApproval(Reimbursement reimbursement) {
+		reimburseDao.updateDepheadApproval(reimbursement);
+	}
+	
+	@Override
+	public void updateBencoApproval(Reimbursement reimbursement) {
+		reimburseDao.updateBencoApproval(reimbursement);
+	}
+	
 	
 }

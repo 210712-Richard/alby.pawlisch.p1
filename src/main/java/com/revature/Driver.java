@@ -83,8 +83,16 @@ public class Driver {
 		
 		// get a form
 		app.get("/reimbursement/download/:employee/:reimburseId", reimbursementControl::getForm);
-		
 
+		// submit an approval email
+		app.put("/reimbursement/email/:employee/:reimburseId", reimbursementControl::approvalEmail);
+		
+		// submit supervisor or dephead approval
+		app.put("/reimbursement/approval/:employee/:reimburseId", reimbursementControl::regularApproval);
+		
+		// submit benco approval
+		app.put("/reimbursement/approval/benefits/:employee/:reimburseId", reimbursementControl::bencoApproval);
+		
 	}
 	
 	

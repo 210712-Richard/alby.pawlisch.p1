@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -171,6 +172,119 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		} else {
 			ctx.status(403);
 		}
+	}
+	
+	@Override
+	public void approvalEmail(Context ctx) {
+		// send email to s3 w/ key
+		// build reimbursement and send to service
+		log.trace("Called approveEmail");
+		
+		User loggedUser = ctx.sessionAttribute("loggedUser");
+		String employee = ctx.pathParam("employee");
+		UUID reimburseId = UUID.fromString(ctx.pathParam("reimburseId"));
+		
+		if(employee.equals(loggedUser.getUsername())){
+			
+			String filetype = ctx.header("Extension");
+			if (filetype == null) {
+				ctx.status(400);
+				return;
+			}
+		
+			String formName = employee + "ReimbursementEmail";
+			String key = formName + "." + filetype;
+			
+			S3Util.getInstance().uploadToBucket(key, ctx.bodyAsBytes());
+			
+			Reimbursement updateReimbursement = new Reimbursement();
+			updateReimbursement.setApprovedEmail(key);
+			updateReimbursement.setSuperApproval(true);
+			updateReimbursement.setEmployee(employee);
+			updateReimbursement.setId(reimburseId);
+			
+			reimburseService.emailApprove(updateReimbursement);
+			
+			if (updateReimbursement != null) {
+				ctx.status(201);
+				ctx.json(updateReimbursement);
+			}
+			
+			
+		} else {
+			ctx.status(403);
+		}
+		
+	}
+	
+	@Override
+	public void regularApproval(Context ctx) {
+		// find if loggedUser is supervisor or head
+		// build reimbursement and refer to appropriate service
+		User loggedUser = ctx.sessionAttribute("loggedUser");
+		String employee = ctx.pathParam("employee");
+		UUID reimburseId = UUID.fromString(ctx.pathParam("reimburseId"));
+		String loggedUsername = loggedUser.getUsername();
+		
+		Boolean supervisor = userService.isSupervisor(loggedUsername, employee);
+		Boolean dephead = userService.isDephead(loggedUsername, employee);
+		
+		if (supervisor.equals(true)) {
+			// body has approval status
+			Reimbursement reimburseApprove = ctx.bodyAsClass(Reimbursement.class);
+			reimburseApprove.setLastApprovalDate(LocalDate.now());
+			reimburseApprove.setEmployee(employee);
+			reimburseApprove.setId(reimburseId);
+			
+			log.trace("Supervisor " + loggedUsername + "approved reimbursement");
+			log.debug(reimburseApprove);
+			
+			reimburseService.updateSuperApproval(reimburseApprove);
+			ctx.status(201);
+			return;
+		}
+		if (dephead.equals(true)) {
+			
+			Reimbursement calledReimbursement = reimburseService.viewOneReimbursement(reimburseId, employee);
+			Boolean superApproval = calledReimbursement.getSuperApproval();
+			
+			if (superApproval.equals(true)) {
+				// body has approval status
+				Reimbursement reimburseApprove = ctx.bodyAsClass(Reimbursement.class);
+				reimburseApprove.setLastApprovalDate(LocalDate.now());
+				reimburseApprove.setEmployee(employee);
+				reimburseApprove.setId(reimburseId);
+				
+				log.trace("Department Head " + loggedUsername + "approved reimbursement");
+				log.debug(reimburseApprove);
+				
+				reimburseService.updateDepheadApproval(reimburseApprove);
+				ctx.status(201);
+				
+			} else {
+				ctx.status(403);
+				if (superApproval.equals(false)) {
+					ctx.html("Supervisor has denied reimbursement");
+				}
+			}
+			
+			return;
+			
+		} else {
+			ctx.status(403);
+		}
+		
+		
+	}
+	
+	@Override
+	public void bencoApproval(Context ctx) {
+		// fine if loggedUser is benco
+		// build reimbursement and send
+		User loggedUser = ctx.sessionAttribute("loggedUser");
+		String employee = ctx.pathParam("employee");
+		UUID reimburseId = UUID.fromString(ctx.pathParam("reimburseId"));
+		String loggedUsername = loggedUser.getUsername();
 	}
 	
 

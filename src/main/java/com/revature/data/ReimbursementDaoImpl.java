@@ -116,6 +116,8 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 		String query = "update reimbursement set approvedEmail = ?, superApproval = ? where employee =? and id=?;";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
 				.build();
+		BoundStatement bound = session.prepare(simple).bind(reimbursement.getApprovedEmail(), reimbursement.getSuperApproval(), reimbursement.getEmployee(), reimbursement.getId());
+		session.execute(bound);
 	}
 	
 	@Override
@@ -125,6 +127,10 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 		String query = "update reimbursement set superApproval = ?, lastApprovalDate = ? where employee =? and id=?;";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
 				.build();
+		BoundStatement bound = session.prepare(simple).bind(reimbursement.getSuperApproval(), reimbursement.getLastApprovalDate(),
+				reimbursement.getEmployee(), reimbursement.getId());
+		session.execute(bound);
+				
 	}
 	
 	@Override
@@ -134,6 +140,9 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 		String query = "update reimbursement set headApproval = ?, lastApprovalDate = ? where employee =? and id=?;";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
 				.build();
+		BoundStatement bound = session.prepare(simple).bind(reimbursement.getHeadApproval(), reimbursement.getLastApprovalDate(),
+				reimbursement.getEmployee(), reimbursement.getId());
+		session.execute(bound);
 	}
 	
 	@Override
@@ -144,6 +153,9 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 		String query = "update reimbursement set bencoApproval = ?, lastApprovalDate = ?, approvedAmount = ? where employee =? and id=?;";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
 				.build();
+		BoundStatement bound = session.prepare(simple).bind(reimbursement.getBencoApproval(), reimbursement.getLastApprovalDate(),
+				reimbursement.getApprovedAmount(), reimbursement.getEmployee(), reimbursement.getId());
+		session.execute(bound);
 	}
 	
 	

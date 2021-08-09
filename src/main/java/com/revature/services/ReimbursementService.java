@@ -9,13 +9,20 @@ public interface ReimbursementService {
 
 	Reimbursement apply(String reimburseForm, String loggedUser, Long requestAmount);
 
-	Reimbursement emailApprove();
-
 	List<Reimbursement> viewReimbursementsFromEmployee(String employee);
 
 	Reimbursement viewOneReimbursement(UUID id, String employee);
 
 	void deleteReimbursement(UUID id, String employee);
 
+	void emailApprove(Reimbursement reimbursement);
+
+	void updateSuperApproval(Reimbursement reimbursement);
+
+
+	void updateDepheadApproval(Reimbursement reimbursement);
+
+
+	void updateBencoApproval(Reimbursement reimbursement);
 
 }

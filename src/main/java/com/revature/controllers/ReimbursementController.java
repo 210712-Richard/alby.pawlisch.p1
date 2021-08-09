@@ -14,4 +14,10 @@ public interface ReimbursementController {
 
 	void deleteReimbursement(Context ctx);
 
+	void approvalEmail(Context ctx);
+
+	void regularApproval(Context ctx);
+
+	void bencoApproval(Context ctx);
+
 }
