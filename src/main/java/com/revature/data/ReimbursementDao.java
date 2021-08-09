@@ -22,8 +22,12 @@ public interface ReimbursementDao {
 	void updateSuperApproval(Reimbursement reimbursement);
 
 	void updateDepheadApproval(Reimbursement reimbursement);
+	
+	void depheadIsSupervisor(Reimbursement reimbursement);
 
 	void updateBencoApproval(Reimbursement reimbursement);
+
+	
 	
 
 

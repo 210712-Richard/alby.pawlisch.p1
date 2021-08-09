@@ -146,6 +146,16 @@ public class ReimbursementDaoImpl implements ReimbursementDao {
 	}
 	
 	@Override
+	public void depheadIsSupervisor(Reimbursement reimbursement) {
+		String query = "update reimbursement set superApproval = ?, headApproval = ?, lastApprovalDate = ? where employee =? and id=?;";
+		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
+				.build();
+		BoundStatement bound = session.prepare(simple).bind(reimbursement.getSuperApproval(), reimbursement.getHeadApproval(), 
+				reimbursement.getLastApprovalDate(), reimbursement.getEmployee(), reimbursement.getId());
+		session.execute(bound);
+	}
+	
+	@Override
 	public void updateBencoApproval(Reimbursement reimbursement) {
 		// sets bencoApproval
 		// sets lastApprovalDate

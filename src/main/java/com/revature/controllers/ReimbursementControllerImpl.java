@@ -225,21 +225,19 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		String employee = ctx.pathParam("employee");
 		UUID reimburseId = UUID.fromString(ctx.pathParam("reimburseId"));
 		String loggedUsername = loggedUser.getUsername();
+		String superNull = userService.getUser(employee).getSupervisor();
+		Reimbursement reimburseApprove = ctx.bodyAsClass(Reimbursement.class);
 		
 		Boolean supervisor = userService.isSupervisor(loggedUsername, employee);
 		Boolean dephead = userService.isDephead(loggedUsername, employee);
 		
 		if (supervisor.equals(true)) {
 			// body has approval status
-			Reimbursement reimburseApprove = ctx.bodyAsClass(Reimbursement.class);
-			reimburseApprove.setLastApprovalDate(LocalDate.now());
-			reimburseApprove.setEmployee(employee);
-			reimburseApprove.setId(reimburseId);
 			
-			log.trace("Supervisor " + loggedUsername + "approved reimbursement");
-			log.debug(reimburseApprove);
+			log.trace("Supervisor " + loggedUsername + "edited approval status");
+			log.debug(reimburseApprove.getSuperApproval());
 			
-			reimburseService.updateSuperApproval(reimburseApprove);
+			reimburseService.updateSuperApproval(reimburseApprove, employee, reimburseId);
 			ctx.status(201);
 			return;
 		}
@@ -249,19 +247,20 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 			Boolean superApproval = calledReimbursement.getSuperApproval();
 			
 			if (superApproval.equals(true)) {
-				// body has approval status
-				Reimbursement reimburseApprove = ctx.bodyAsClass(Reimbursement.class);
-				reimburseApprove.setLastApprovalDate(LocalDate.now());
-				reimburseApprove.setEmployee(employee);
-				reimburseApprove.setId(reimburseId);
 				
 				log.trace("Department Head " + loggedUsername + "approved reimbursement");
-				log.debug(reimburseApprove);
+				log.debug(reimburseApprove.getHeadApproval());
 				
-				reimburseService.updateDepheadApproval(reimburseApprove);
+				reimburseService.updateDepheadApproval(reimburseApprove, employee, reimburseId);
 				ctx.status(201);
+				return;
 				
-			} else {
+			} if (superNull.equals(null)) {
+				reimburseService.depheadIsSuper(reimburseApprove, employee, reimburseId);
+				ctx.status(201);
+				return;
+			}
+			else {
 				ctx.status(403);
 				if (superApproval.equals(false)) {
 					ctx.html("Supervisor has denied reimbursement");

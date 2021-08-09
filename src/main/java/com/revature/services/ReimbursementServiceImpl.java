@@ -73,13 +73,33 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 	}
 	
 	@Override
-	public void updateSuperApproval(Reimbursement reimbursement) {
+	public void updateSuperApproval(Reimbursement reimbursement, String employee, UUID id) {
+		// need reimbursement, employee, id
+		// reimbursement already has approval status
+		reimbursement.setLastApprovalDate(LocalDate.now());
+		reimbursement.setEmployee(employee);
+		reimbursement.setId(id);
 		reimburseDao.updateSuperApproval(reimbursement);
 	}
 	
 	@Override
-	public void updateDepheadApproval(Reimbursement reimbursement) {
+	public void updateDepheadApproval(Reimbursement reimbursement, String employee, UUID id) {
+		// need reimbursement, employee, id
+		// reimbursement already has approval status
+		reimbursement.setLastApprovalDate(LocalDate.now());
+		reimbursement.setEmployee(employee);
+		reimbursement.setId(id);
 		reimburseDao.updateDepheadApproval(reimbursement);
+	}
+	
+	@Override
+	public void depheadIsSuper(Reimbursement reimbursement, String employee, UUID id) {
+		// need reimbursement, employee, id
+		// reimbursement already has approval status
+		reimbursement.setSuperApproval(reimbursement.getHeadApproval());
+		reimbursement.setLastApprovalDate(LocalDate.now());
+		reimbursement.setEmployee(employee);
+		reimbursement.setId(id);
 	}
 	
 	@Override

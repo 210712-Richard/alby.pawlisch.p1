@@ -17,12 +17,14 @@ public interface ReimbursementService {
 
 	void emailApprove(Reimbursement reimbursement);
 
-	void updateSuperApproval(Reimbursement reimbursement);
+	void updateSuperApproval(Reimbursement reimbursement, String employee, UUID id);
 
-
-	void updateDepheadApproval(Reimbursement reimbursement);
-
+	void updateDepheadApproval(Reimbursement reimbursement, String employee, UUID id);
+	
+	void depheadIsSuper(Reimbursement reimbursement, String employee, UUID id);
 
 	void updateBencoApproval(Reimbursement reimbursement);
+
+	
 
 }
