@@ -13,10 +13,13 @@ public class DataBaseCreator {
 		StringBuilder stringBuild = new StringBuilder("DROP TABLE IF EXISTS User;");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
-		stringBuild = new StringBuilder("DROP TABLE IF EXISTS ReceivedNotif;");
+		stringBuild = new StringBuilder("DROP TABLE IF EXISTS Notification;");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 		stringBuild = new StringBuilder("DROP TABLE IF EXISTS Reimbursement;");
+		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
+		
+		stringBuild= new StringBuilder("DROP TABLE IF EXISTS FinalForm;");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 		
@@ -29,7 +32,7 @@ public class DataBaseCreator {
 				.append("supervisor text, dephead text, inbox list<uuid> );");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
-		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS ReceivedNotif (")
+		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS Notification (")
 				.append("receiver text, id uuid, message text, sentDate date, ")
 				.append("primary key (receiver, id));");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
@@ -40,6 +43,11 @@ public class DataBaseCreator {
 				.append("headApproval boolean, bencoApproval boolean, urgent Boolean, ")
 				.append("requestAmount bigint, approvedAmount bigint, ")
 				.append("primary key(employee, id));");
+		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
+		
+		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS FinalForm (")
+				.append("id uuid PRIMARY KEY, employee text, submission date, form type, urgent boolean, ")
+				.append("filename string)");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 	}

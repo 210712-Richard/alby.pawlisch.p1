@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.revature.beans.Notification;
 
-public interface ReceivedNotifDao {
+public interface NotificationDao {
 
 	void addNotif(Notification notif);
 

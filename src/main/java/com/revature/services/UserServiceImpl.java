@@ -10,8 +10,8 @@ import org.apache.logging.log4j.Logger;
 import com.revature.beans.Notification;
 import com.revature.beans.User;
 import com.revature.beans.UserType;
-import com.revature.data.ReceivedNotifDao;
-import com.revature.data.ReceivedNotifDaoImpl;
+import com.revature.data.NotificationDao;
+import com.revature.data.NotificationDaoImpl;
 import com.revature.data.UserDao;
 import com.revature.data.UserDaoImpl;
 import com.revature.factory.BeanFactory;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService{
 	
 	public UserDao userDao = (UserDao) BeanFactory.getFactory().get(UserDao.class, UserDaoImpl.class);
 	
-	public ReceivedNotifDao receivedNotifDao = (ReceivedNotifDao) BeanFactory.getFactory().get(ReceivedNotifDao.class, ReceivedNotifDaoImpl.class);
+	public NotificationDao receivedNotifDao = (NotificationDao) BeanFactory.getFactory().get(NotificationDao.class, NotificationDaoImpl.class);
 
 
 	@Override

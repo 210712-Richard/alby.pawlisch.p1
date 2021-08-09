@@ -17,13 +17,13 @@ import com.revature.factory.Log;
 import com.revature.util.CassandraUtil;
 
 @Log
-public class ReceivedNotifDaoImpl implements ReceivedNotifDao {
+public class NotificationDaoImpl implements NotificationDao {
 
 	private CqlSession session = CassandraUtil.getInstance().getSession();
 	
 	@Override
 	public void addNotif(Notification notif) {
-		String query = "Insert into receivednotif (receiver, message, sentDate) values (?, ?, ?);";
+		String query = "Insert into notification (receiver, message, sentDate) values (?, ?, ?);";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
 		BoundStatement bound = session.prepare(simple)
 				.bind(notif.getReciever(), notif.getMessage(), notif.getSentDate());
@@ -34,7 +34,7 @@ public class ReceivedNotifDaoImpl implements ReceivedNotifDao {
 	@Override
 	public List<Notification> getNotifs() {
 		List<Notification> notifs = new ArrayList<Notification>();
-		String query = "Select id, reciever, message, sentDate from receivednotif";
+		String query = "Select id, reciever, message, sentDate from notification";
 		ResultSet resultSet = session.execute(new SimpleStatementBuilder(query).build());
 		
 		resultSet.forEach(row -> {
@@ -53,7 +53,7 @@ public class ReceivedNotifDaoImpl implements ReceivedNotifDao {
 	
 	@Override
 	public Notification getNotifById(UUID id) {
-		String query = "Select id, reciever, message, sentDate from receivednotif where id = ?";
+		String query = "Select id, reciever, message, sentDate from notification where id = ?";
 		BoundStatement bound = session.prepare(new SimpleStatementBuilder(query).build()).bind(id);
 		ResultSet resultSet = session.execute(bound);
 		
@@ -73,7 +73,7 @@ public class ReceivedNotifDaoImpl implements ReceivedNotifDao {
 	
 	
 	public void deleteNotif(Notification notif) {
-		String query = "Delete from receivednotif where id = ?";
+		String query = "Delete from notification where id = ?";
 		BoundStatement bound = session
 				.prepare(new SimpleStatementBuilder(query)
 						.setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
