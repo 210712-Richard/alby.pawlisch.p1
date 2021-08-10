@@ -19,11 +19,20 @@ import com.revature.factory.Log;
 
 @Log
 public class UserServiceImpl implements UserService{
+	public UserDao userDao;
+	public NotificationDao notifDao;
 	
-	public UserDao userDao = (UserDao) BeanFactory.getFactory().get(UserDao.class, UserDaoImpl.class);
+	public UserServiceImpl() {
+		super();
+		userDao = (UserDao) BeanFactory.getFactory().get(UserDao.class, UserDaoImpl.class);
+		notifDao = (NotificationDao) BeanFactory.getFactory().get(NotificationDao.class, NotificationDaoImpl.class);
+	}
 	
-	public NotificationDao receivedNotifDao = (NotificationDao) BeanFactory.getFactory().get(NotificationDao.class, NotificationDaoImpl.class);
-
+	// make constructor for tests
+	public UserServiceImpl(UserDao userDao2, NotificationDao notifDao2) {
+		this.userDao = userDao2;
+		this.notifDao = notifDao2;
+	}
 
 	@Override
 	public User getUser(String username) {

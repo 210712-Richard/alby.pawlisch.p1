@@ -58,40 +58,51 @@ public class Driver {
 		app.get("/", (ctx)->ctx.html("Hello Project 1"));
 		
 		// login
-		app.post("/login", userControl::login);
+		app.post("/users", userControl::login);
 		
 		// logout
-		app.delete("/login", userControl::logout);
+		app.delete("/users", userControl::logout);
 		
 		// check inbox
-		app.get("/inbox", userControl::inbox);
+		app.get("/notifications", userControl::inbox);
 		
 		// submit file
 		// put requested amount into Reimburse-Amount header
 		// file into body - binary
 		// put extension name into Extension header
-		app.put("/reimbursement", reimbursementControl::addReimbursement);
+		app.put("/reimbursements", reimbursementControl::addReimbursement);
 
 		// get reimbursements from a specific employee
-		app.get("/reimbursement/:employee", reimbursementControl::getEmployeeReimbursements);
+		app.get("/reimbursements/:employee", reimbursementControl::getEmployeeReimbursements);
 
 		// get a specific reimbursement
-		app.get("/reimbursement/:employee/:reimburseId", reimbursementControl::getOneReimbursement);
+		app.get("/reimbursements/:employee/:reimburseId", reimbursementControl::getOneReimbursement);
 		
 		// delete a reimbursement
-		app.delete("/reimbursement/:employee/:reimburseId", reimbursementControl::deleteReimbursement);
+		app.delete("/reimbursements/:employee/:reimburseId", reimbursementControl::deleteReimbursement);
 		
 		// get a form
-		app.get("/reimbursement/download/:employee/:reimburseId", reimbursementControl::getForm);
+		app.get("/reimbursements/:employee/:reimburseId/files", reimbursementControl::getForm);
 
 		// submit an approval email
-		app.put("/reimbursement/email/:employee/:reimburseId", reimbursementControl::approvalEmail);
+		app.put("/reimbursements/:employee/:reimburseId/email", reimbursementControl::approvalEmail);
 		
 		// submit supervisor or dephead approval
-		app.put("/reimbursement/approval/:employee/:reimburseId", reimbursementControl::regularApproval);
+		app.put("/reimbursements/:employee/:reimburseId/approval", reimbursementControl::regularApproval);
 		
 		// submit benco approval
-		app.put("/reimbursement/approval/benefits/:employee/:reimburseId", reimbursementControl::bencoApproval);
+		// add a header for formtype
+		app.put("/reimbursements/:employee/:reimburseId/appproval/benefits", reimbursementControl::bencoApproval);
+		
+		// view final forms from an employee
+		
+		// view one final form
+		
+		// submit a file to a final form
+		
+		// get/download a file
+		
+		// change approval status on 
 		
 	}
 	

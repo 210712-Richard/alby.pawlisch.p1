@@ -289,7 +289,15 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		User loggedUser = ctx.sessionAttribute("loggedUser");
 		String employee = ctx.pathParam("employee");
 		UUID reimburseId = UUID.fromString(ctx.pathParam("reimburseId"));
-		String loggedUsername = loggedUser.getUsername();
+		
+		Boolean benco = userService.isBenco(loggedUser.getUsername());
+		if(benco.equals(true)) {
+			// calls both finalForm AND reimbursement
+			// and eventually, add for exceedingFunds if necessary
+		} else {
+			ctx.status(403);
+		}
+		
 	}
 	
 

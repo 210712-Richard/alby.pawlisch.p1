@@ -9,22 +9,28 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.revature.beans.User;
+import com.revature.data.NotificationDao;
 import com.revature.data.UserDao;
 
 public class UserServiceTest {
 	private static UserServiceImpl service;
 	private static User user;
+	private static UserDao userDao;
+	private static NotificationDao notifDao;
 
 	@BeforeAll
 	public static void setUpClass() {
 		user = new User();
 		user.setUsername("Test");
+		user.setSupervisor("Supervisor");
+		user.setDephead("Dephead");
 	}
 
 	@BeforeEach
 	public void setUpTests() {
-		service = new UserServiceImpl();
-		service.userDao = Mockito.mock(UserDao.class);
+		userDao = Mockito.mock(UserDao.class);
+		notifDao = Mockito.mock(NotificationDao.class);
+		service = new UserServiceImpl(userDao, notifDao);
 	}
 
 	
@@ -40,9 +46,9 @@ public class UserServiceTest {
 	  
 	}
 	 
-
-	/*
-	  @Test public void testIsSupervisorTrue() { 
+	
+	  @Test 
+	  public void testIsSupervisorTrue() { 
 	  
 		  String username = "Supervisor";
 	  
@@ -50,24 +56,29 @@ public class UserServiceTest {
 	  
 	  }
 	  
-	  @Test public void testIsSupervisorFalse() { 
+	  @Test 
+	  public void testIsSupervisorFalse() { 
 		  String username = "Glen";
 	  
 		  assertNotEquals(username, user.getSupervisor(), "Asserting they are not the supervisor"); 
 	  }
 	  
-	  @Test public void testIsDepheadTrue() { 
+	  @Test 
+	  public void testIsDepheadTrue() { 
 		  String username = "Dephead";
 	  
-		  assertEquals(username, user.getSupervisor(),
+		  assertEquals(username, user.getDephead(),
 		  "Asserting they are the dephead"); 
 	  }
 	  
-	  @Test public void testIsDepheadFalse() { 
+	  @Test 
+	  public void testIsDepheadFalse() { 
 		  String username = "Jen";
 	  
-		  assertNotEquals(username, user.getSupervisor(),"Asserting they are not the dephead"); 
+		  assertNotEquals(username, user.getDephead(),"Asserting they are not the dephead"); 
 	  }
-	  */
+	  
+	  
+	  
 	 
 }

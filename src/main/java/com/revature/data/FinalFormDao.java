@@ -1,6 +1,7 @@
 package com.revature.data;
 
-import java.util.UUID;
+
+import java.util.List;
 
 import com.revature.beans.FinalForm;
 
@@ -8,12 +9,15 @@ public interface FinalFormDao {
 
 	void addFinalForm(FinalForm finalForm);
 
-	void getFinalById(FinalForm finalForm);
+	FinalForm getFinalById(FinalForm finalForm);
+	
+	 List<FinalForm> getFinalsByEmployee(String employee);
 
 	void updateFile(FinalForm finalForm);
 
 	void updateApproval(FinalForm finalForm);
 
-	void deleteFinalForm(UUID finalId);
+	void deleteFinalForm(FinalForm finalForm);
+
 
 }
