@@ -8,10 +8,14 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.revature.beans.FinalForm;
+import com.revature.beans.FormType;
 import com.revature.beans.Reimbursement;
 import com.revature.beans.User;
 import com.revature.factory.BeanFactory;
 import com.revature.factory.Log;
+import com.revature.services.FinalFormService;
+import com.revature.services.FinalFormServiceImpl;
 import com.revature.services.ReimbursementService;
 import com.revature.services.ReimbursementServiceImpl;
 import com.revature.services.UserService;
@@ -26,6 +30,7 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 	private ReimbursementService reimburseService = (ReimbursementService) BeanFactory.getFactory().get(ReimbursementService.class,
 			ReimbursementServiceImpl.class);
 	private UserService userService = (UserService) BeanFactory.getFactory().get(UserService.class, UserServiceImpl.class);
+	private FinalFormService finalService = (FinalFormService) BeanFactory.getFactory().get(FinalFormService.class, FinalFormServiceImpl.class);
 	private static Logger log = LogManager.getLogger(ReimbursementControllerImpl.class);
 	
 	
@@ -294,6 +299,18 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		if(benco.equals(true)) {
 			// calls both finalForm AND reimbursement
 			// and eventually, add for exceedingFunds if necessary
+			
+			// reimbursement setup
+			Reimbursement updateReimbursement = ctx.bodyAsClass(Reimbursement.class);
+			reimburseService.updateBencoApproval(updateReimbursement, employee, reimburseId);
+			
+			// final form part, approved amount in body
+			Reimbursement reimbursement = reimburseService.viewOneReimbursement(reimburseId, employee);
+			FormType formType = FormType.valueOf(ctx.header("FormType"));
+			finalService.add(reimbursement, formType);
+			
+			ctx.status(201);
+			
 		} else {
 			ctx.status(403);
 		}

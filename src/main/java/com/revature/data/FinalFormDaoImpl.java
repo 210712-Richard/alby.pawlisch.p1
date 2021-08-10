@@ -37,11 +37,11 @@ public class FinalFormDaoImpl implements FinalFormDao {
 	
 	// get by id method
 	@Override
-	public FinalForm getFinalById(FinalForm finalForm) {
+	public FinalForm getFinalById(String employee, UUID id) {
 		String query = "Select * from finalForm where employee =? and id = ?";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
 				.build();
-		BoundStatement bound = session.prepare(simple).bind(finalForm.getEmployee(), finalForm.getId());
+		BoundStatement bound = session.prepare(simple).bind(employee, id);
 		ResultSet results = session.execute(bound);
 		Row row = results.one();
 		if (row == null) {

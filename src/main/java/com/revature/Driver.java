@@ -3,6 +3,8 @@ package com.revature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.revature.controllers.FinalFormController;
+import com.revature.controllers.FinalFormControllerImpl;
 import com.revature.controllers.ReimbursementController;
 import com.revature.controllers.ReimbursementControllerImpl;
 import com.revature.controllers.UserController;
@@ -55,6 +57,7 @@ public class Driver {
 		
 		UserController userControl = (UserController) BeanFactory.getFactory().get(UserController.class, UserControllerImpl.class);
 		ReimbursementController reimbursementControl = (ReimbursementController) BeanFactory.getFactory().get(ReimbursementController.class, ReimbursementControllerImpl.class);
+		FinalFormController finalControl = (FinalFormController) BeanFactory.getFactory().get(FinalFormController.class, FinalFormControllerImpl.class);
 		app.get("/", (ctx)->ctx.html("Hello Project 1"));
 		
 		// login
@@ -92,17 +95,23 @@ public class Driver {
 		
 		// submit benco approval
 		// add a header for formtype
+		// body has approval status and approved amount
 		app.put("/reimbursements/:employee/:reimburseId/appproval/benefits", reimbursementControl::bencoApproval);
 		
 		// view final forms from an employee
+		app.get("/finalforms/:employee/", finalControl::employeeForms);
 		
 		// view one final form
+		app.get("/finalforms/:employee/:formId", finalControl::getForm);
 		
 		// submit a file to a final form
+		app.put("/finalforms/:employee/:formId/files", finalControl::submitFile);
 		
 		// get/download a file
+		app.get("/finalforms/:employee/:formId/files", finalControl::getFile);
 		
 		// change approval status on 
+		app.put("/finalforms/:employee/:formId/approval", finalControl::approval);
 		
 	}
 	

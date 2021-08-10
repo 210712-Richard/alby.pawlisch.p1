@@ -103,7 +103,10 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 	}
 	
 	@Override
-	public void updateBencoApproval(Reimbursement reimbursement) {
+	public void updateBencoApproval(Reimbursement reimbursement, String employee, UUID id) {
+		reimbursement.setLastApprovalDate(LocalDate.now());
+		reimbursement.setEmployee(employee);
+		reimbursement.setId(id);
 		reimburseDao.updateBencoApproval(reimbursement);
 	}
 	

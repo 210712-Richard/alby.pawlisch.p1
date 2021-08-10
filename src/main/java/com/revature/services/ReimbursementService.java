@@ -23,7 +23,7 @@ public interface ReimbursementService {
 	
 	void depheadIsSuper(Reimbursement reimbursement, String employee, UUID id);
 
-	void updateBencoApproval(Reimbursement reimbursement);
+	void updateBencoApproval(Reimbursement reimbursement, String employee, UUID id);
 
 	
 
