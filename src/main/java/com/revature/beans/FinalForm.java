@@ -22,6 +22,7 @@ public class FinalForm implements Serializable {
 		this();
 		this.id = id;
 		this.employee = employee;
+		this.approved = approved;
 		this.submissionDate = submissionDate;
 		this.formType = formType;
 		this.urgent = urgent;

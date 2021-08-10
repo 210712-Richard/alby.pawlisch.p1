@@ -46,8 +46,8 @@ public class DataBaseCreator {
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS FinalForm (")
-				.append("id uuid PRIMARY KEY, employee text, submission date, form type, urgent boolean, ")
-				.append("filename string)");
+				.append("id uuid PRIMARY KEY, employee text, approved boolean, submission date, form type,")
+				.append(" urgent boolean, filename string)");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 	}

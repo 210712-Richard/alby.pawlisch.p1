@@ -47,7 +47,10 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 			return;
 		}
 		
-		String formName = employee + "Reimbursement";
+		List<Reimbursement> employeeReimbursements = reimburseService.viewReimbursementsFromEmployee(employee);
+		Integer count = employeeReimbursements.size() + 1;
+		
+		String formName = employee + "Reimbursement" + count;
 		String key = formName + "." + filetype;
 		
 		S3Util.getInstance().uploadToBucket(key, ctx.bodyAsBytes());
@@ -183,6 +186,9 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		User loggedUser = ctx.sessionAttribute("loggedUser");
 		String employee = ctx.pathParam("employee");
 		UUID reimburseId = UUID.fromString(ctx.pathParam("reimburseId"));
+		Reimbursement reimbursement = reimburseService.viewOneReimbursement(reimburseId, employee);
+		String[] formParts = reimbursement.getReimburseForm().split(".");
+		String reimburseFormName = formParts[0];
 		
 		if(employee.equals(loggedUser.getUsername())){
 			
@@ -192,7 +198,7 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 				return;
 			}
 		
-			String formName = employee + "ReimbursementEmail";
+			String formName = reimburseFormName + "Email";
 			String key = formName + "." + filetype;
 			
 			S3Util.getInstance().uploadToBucket(key, ctx.bodyAsBytes());
