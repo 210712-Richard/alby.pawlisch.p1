@@ -22,7 +22,8 @@ public class DataBaseCreator {
 		stringBuild= new StringBuilder("DROP TABLE IF EXISTS FinalForm;");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
-		
+		stringBuild= new StringBuilder("DROP TABLE IF EXISTS ExceedFunds;");
+		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 	}
 	
@@ -48,6 +49,11 @@ public class DataBaseCreator {
 		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS FinalForm (")
 				.append("id uuid, employee text, approved boolean, submission date, form type,")
 				.append(" urgent boolean, filename string, primary key(employee, id)");
+		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
+		
+		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS (")
+				.append("id uuid PRIMARY KEY, reimbursementId uuid, amount bigint, ")
+				.append("reason string, bencoName string);");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 	}

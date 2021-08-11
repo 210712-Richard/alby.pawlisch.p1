@@ -1,22 +1,27 @@
 package com.revature.controllers;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
 import com.revature.beans.FinalForm;
+import com.revature.beans.Reimbursement;
 import com.revature.beans.User;
 import com.revature.factory.BeanFactory;
 import com.revature.factory.Log;
 import com.revature.services.FinalFormService;
 import com.revature.services.FinalFormServiceImpl;
+import com.revature.services.ReimbursementService;
+import com.revature.services.ReimbursementServiceImpl;
+import com.revature.util.S3Util;
 
 import io.javalin.http.Context;
 
 @Log
 public class FinalFormControllerImpl implements FinalFormController {	
 	private FinalFormService finalService = (FinalFormService) BeanFactory.getFactory().get(FinalFormService.class, FinalFormServiceImpl.class);
-	
-	// security check: isAllowed(finalForm, loggedUser)
+	private ReimbursementService reimburseService = (ReimbursementService) BeanFactory.getFactory().get(ReimbursementService.class,
+			ReimbursementServiceImpl.class);
 	
 	// get all forms from an employee
 	@Override
@@ -67,9 +72,39 @@ public class FinalFormControllerImpl implements FinalFormController {
 		User loggedUser = ctx.sessionAttribute("loggedUser");
 		String employee = ctx.pathParam("employee");
 		UUID formId = UUID.fromString(ctx.pathParam("formId"));
+		FinalForm finalForm = finalService.getById(employee, formId);
 		
 		if(employee.equals(loggedUser.getUsername())) {
 			// do S3 stuff
+			UUID reimburseId = finalForm.getReimburseId();
+			Reimbursement reimbursement = reimburseService.viewOneReimbursement(reimburseId, employee);
+			String[] formParts = reimbursement.getReimburseForm().split(".");
+			String reimburseFormName = formParts[0];
+			
+			String filetype = ctx.header("Extension");
+			if(filetype == null) {
+				ctx.status(400);
+				return;
+			}
+			
+			String formName = reimburseFormName + "Final";
+			String key = formName + "." + filetype;
+			
+			S3Util.getInstance().uploadToBucket(key, ctx.bodyAsBytes());
+			
+			FinalForm updateForm = new FinalForm();
+			updateForm.setId(formId);
+			updateForm.setEmployee(employee);
+			updateForm.setFilename(key);
+			
+			finalService.updateFile(updateForm);
+			
+			if (updateForm != null) {
+				ctx.status(201);
+				ctx.html("Added form: "+key);
+			}
+			
+			
 		} else {
 			ctx.status(403);
 			return;
@@ -87,8 +122,14 @@ public class FinalFormControllerImpl implements FinalFormController {
 		if(employee.equals(loggedUser.getUsername())
 				|| finalService.isAllowed(form, loggedUser).equals(true)) {
 			// get file, S3 stuff
+			try {
+				InputStream finalForm = S3Util.getInstance().getObject(form.getFilename());
+				ctx.result(finalForm);
+			} catch (Exception e){
+				ctx.status(500);
+			}
 			
-			return;
+			
 		} else {
 			ctx.status(403);
 			return;

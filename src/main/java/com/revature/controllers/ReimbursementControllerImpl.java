@@ -40,8 +40,6 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		log.debug(ctx.body());
 		User loggedUser = ctx.sessionAttribute("loggedUser");
 		
-		// LATER
-		// CHECK THAT EMPLOYEE HASNT SUBMITTED OTHER REIMBURSEMENTS
 		String employee = loggedUser.getUsername();
 		Long requestAmount = Long.parseLong(ctx.header("Reimburse-Amount"));
 		
