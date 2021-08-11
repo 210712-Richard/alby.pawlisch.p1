@@ -46,14 +46,16 @@ public class DataBaseCreator {
 				.append("primary key(employee, id));");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
-		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS FinalForm (")
-				.append("id uuid, employee text, approved boolean, submission date, form type,")
-				.append(" urgent boolean, filename string, primary key(employee, id)");
+		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS ExceedFunds (")
+				.append("id uuid PRIMARY KEY, amount bigint, reason text, bencoName text);");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
-		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS (")
-				.append("id uuid PRIMARY KEY, amount bigint, reason string, bencoName string);");
+		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS FinalForm (")
+				.append("id uuid, reimburseId uuid, employee text, approved boolean, submissionDate date,")
+				.append(" formType text, urgent boolean, filename text, primary key(employee, id));");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
+		
+		
 		
 	}
 	

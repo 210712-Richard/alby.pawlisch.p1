@@ -2,6 +2,7 @@ package com.revature.controllers;
 
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,8 +13,11 @@ import com.revature.beans.FinalForm;
 import com.revature.beans.FormType;
 import com.revature.beans.Reimbursement;
 import com.revature.beans.User;
+import com.revature.beans.UserType;
 import com.revature.factory.BeanFactory;
 import com.revature.factory.Log;
+import com.revature.services.ExceedFundsService;
+import com.revature.services.ExceedFundsServiceImpl;
 import com.revature.services.FinalFormService;
 import com.revature.services.FinalFormServiceImpl;
 import com.revature.services.ReimbursementService;
@@ -31,6 +35,7 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 			ReimbursementServiceImpl.class);
 	private UserService userService = (UserService) BeanFactory.getFactory().get(UserService.class, UserServiceImpl.class);
 	private FinalFormService finalService = (FinalFormService) BeanFactory.getFactory().get(FinalFormService.class, FinalFormServiceImpl.class);
+	private ExceedFundsService exceedService = (ExceedFundsService) BeanFactory.getFactory().get(ExceedFundsService.class, ExceedFundsServiceImpl.class);
 	private static Logger log = LogManager.getLogger(ReimbursementControllerImpl.class);
 	
 	
@@ -92,7 +97,7 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 			ctx.html("Reimbursement does not exist.");
 		}
 		
-		if(loggedUsername.equals(reimbursement.getEmployee()) || allowedAccess == true){
+		if(loggedUsername.equals(reimbursement.getEmployee()) || allowedAccess == true || loggedUser.getType().equals(UserType.BENCO)){
 			ctx.json(reimbursement);
 		} else {
 			ctx.status(403);
@@ -121,7 +126,7 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 			ctx.html("Employee does not exist");
 		}
 		
-		if(loggedUsername.equals(employee) || allowedAccess == true){
+		if(loggedUsername.equals(employee) || allowedAccess == true || loggedUser.getType().equals(UserType.BENCO)){
 			ctx.json(reimbursements);
 		} else {
 			ctx.status(403);
@@ -145,13 +150,18 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		if(employee == null) {
 			ctx.status(404);
 			ctx.html("Employee does not exist");
+			return;
 		}
 		if(reimbursement == null) {
 			ctx.status(404);
 			ctx.html("Reimbursement does not exist.");
+			return;
 		}
 		
-		if(loggedUsername.equals(employee) || allowedAccess.equals(true)){
+		if(loggedUsername.equals(employee) 
+				|| allowedAccess.equals(true) 
+				|| loggedUser.getType().equals(UserType.BENCO)){
+			
 			try {
 				InputStream form = S3Util.getInstance().getObject(reimbursement.getReimburseForm());
 				ctx.result(form);
@@ -174,7 +184,18 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		UUID reimburseId = UUID.fromString(ctx.pathParam("reimburseId"));
 		
 		if(employee.equals(loggedUser.getUsername())){
+			
+			Reimbursement reimbursement = reimburseService.viewOneReimbursement(reimburseId, employee);
+			
+			// check if an exceed funds one exists
+			// if yes, delete it too
+			if(reimbursement.getBencoApproval().equals(true)) {
+				exceedService.delete(reimburseId);
+			}
+			
 			reimburseService.deleteReimbursement(reimburseId, employee);
+			
+			
 		} else {
 			ctx.status(403);
 		}
@@ -190,8 +211,10 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		String employee = ctx.pathParam("employee");
 		UUID reimburseId = UUID.fromString(ctx.pathParam("reimburseId"));
 		Reimbursement reimbursement = reimburseService.viewOneReimbursement(reimburseId, employee);
-		String[] formParts = reimbursement.getReimburseForm().split(".");
-		String reimburseFormName = formParts[0];
+		String fullForm = reimbursement.getReimburseForm();
+		log.debug(fullForm);
+		String reimburseFormName = fullForm.substring(0, fullForm.length() - 5);
+		log.debug(reimburseFormName);
 		
 		if(employee.equals(loggedUser.getUsername())){
 			
@@ -293,8 +316,8 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		String employee = ctx.pathParam("employee");
 		UUID reimburseId = UUID.fromString(ctx.pathParam("reimburseId"));
 		
-		Boolean benco = userService.isBenco(loggedUser.getUsername());
-		if(benco.equals(true)) {
+		
+		if(loggedUser.getType().equals(UserType.BENCO)) {
 			// calls both finalForm AND reimbursement
 			// and eventually, add for exceedingFunds if necessary
 			
@@ -306,6 +329,18 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 			Reimbursement reimbursement = reimburseService.viewOneReimbursement(reimburseId, employee);
 			FormType formType = FormType.valueOf(ctx.header("FormType"));
 			finalService.add(reimbursement, formType);
+			
+			Long approveAmount = updateReimbursement.getApprovedAmount();
+			if(approveAmount > reimbursement.getRequestAmount()) {
+				String reason = ctx.header("Reason");
+				if(reason.equals(null)) {
+					ctx.status(400);
+					ctx.html("Need reason for exceeding funds");
+				}
+				Reimbursement refreshReimbursement =  reimburseService.viewOneReimbursement(reimburseId, employee);
+				exceedService.add(refreshReimbursement, reason, loggedUser);
+				
+			}
 			
 			ctx.status(201);
 			
