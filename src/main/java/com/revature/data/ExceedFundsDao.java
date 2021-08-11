@@ -8,8 +8,8 @@ public interface ExceedFundsDao {
 
 	void addExceedFunds(ExceedFunds exceed);
 
-	void delete(UUID id);
-
 	ExceedFunds viewExceedFunds(UUID id);
+	
+	void delete(UUID id);
 
 }

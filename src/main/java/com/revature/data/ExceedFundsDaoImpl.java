@@ -21,27 +21,12 @@ public class ExceedFundsDaoImpl implements ExceedFundsDao {
 	// add method
 	@Override
 	public void addExceedFunds(ExceedFunds exceed) {
-		String query = "Insert into exceedFunds (id, reimburseId, amount, reason, bencoName)"
-				+ " values (?, ?, ?, ?, ?);";
-		UUID id = UUID.randomUUID();
+		String query = "Insert into exceedFunds (id, amount, reason, bencoName)"
+				+ " values (?, ?, ?, ?);";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
 		BoundStatement bound = session.prepare(simple)
-				.bind(id, exceed.getReimburseId(), exceed.getAmount(), exceed.getReason(), exceed.getBencoName());
+				.bind(exceed.getId(), exceed.getAmount(), exceed.getReason(), exceed.getBencoName());
 		session.execute(bound);
-	}
-	
-	// delete method
-	@Override
-	public void delete(UUID id) {
-		String query = "Delete from exceedFunds where id = ?";
-		BoundStatement bound = session
-				.prepare(new SimpleStatementBuilder(query)
-				.setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
-				.build())
-				.bind(id);
-		session.execute(bound);
-		
-		
 	}
 	
 	// view/get method
@@ -58,13 +43,26 @@ public class ExceedFundsDaoImpl implements ExceedFundsDao {
 		
 		ExceedFunds exceed = new ExceedFunds();
 		exceed.setId(row.getUuid("id"));
-		exceed.setReimburseId(row.getUuid("reimburseId"));
 		exceed.setAmount(row.getLong("amount"));
 		exceed.setReason(row.getString("reason"));
 		exceed.setBencoName(row.getString("bencoName"));
 		
 		return exceed;
 	}
+	
+	// delete method
+		@Override
+		public void delete(UUID id) {
+			String query = "Delete from exceedFunds where id = ?";
+			BoundStatement bound = session
+					.prepare(new SimpleStatementBuilder(query)
+					.setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
+					.build())
+					.bind(id);
+			session.execute(bound);
+			
+			
+		}
 	
 
 }

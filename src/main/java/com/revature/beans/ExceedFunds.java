@@ -5,7 +5,6 @@ import java.util.UUID;
 
 public class ExceedFunds implements Serializable {
 	private UUID id;
-	private UUID reimburseId;
 	private Long amount;
 	private String reason;
 	private String bencoName;
@@ -14,10 +13,9 @@ public class ExceedFunds implements Serializable {
 		
 	}
 
-	public ExceedFunds(UUID id, UUID reimburseId, Long amount, String reason, String bencoName) {
+	public ExceedFunds(UUID id, Long amount, String reason, String bencoName) {
 		super();
 		this.id = id;
-		this.reimburseId = reimburseId;
 		this.amount = amount;
 		this.reason = reason;
 		this.bencoName = bencoName;
@@ -29,14 +27,6 @@ public class ExceedFunds implements Serializable {
 
 	public void setId(UUID id) {
 		this.id = id;
-	}
-
-	public UUID getReimburseId() {
-		return reimburseId;
-	}
-
-	public void setReimburseId(UUID reimburseId) {
-		this.reimburseId = reimburseId;
 	}
 
 	public Long getAmount() {
@@ -71,7 +61,6 @@ public class ExceedFunds implements Serializable {
 		result = prime * result + ((bencoName == null) ? 0 : bencoName.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((reason == null) ? 0 : reason.hashCode());
-		result = prime * result + ((reimburseId == null) ? 0 : reimburseId.hashCode());
 		return result;
 	}
 
@@ -104,19 +93,14 @@ public class ExceedFunds implements Serializable {
 				return false;
 		} else if (!reason.equals(other.reason))
 			return false;
-		if (reimburseId == null) {
-			if (other.reimburseId != null)
-				return false;
-		} else if (!reimburseId.equals(other.reimburseId))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "ExceedFunds [id=" + id + ", reimburseId=" + reimburseId + ", amount=" + amount + ", reason=" + reason
-				+ ", bencoName=" + bencoName + "]";
+		return "ExceedFunds [id=" + id + ", amount=" + amount + ", reason=" + reason + ", bencoName=" + bencoName + "]";
 	}
+
 	
 	
 

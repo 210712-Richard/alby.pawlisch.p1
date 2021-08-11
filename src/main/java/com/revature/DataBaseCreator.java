@@ -52,8 +52,7 @@ public class DataBaseCreator {
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS (")
-				.append("id uuid PRIMARY KEY, reimbursementId uuid, amount bigint, ")
-				.append("reason string, bencoName string);");
+				.append("id uuid PRIMARY KEY, amount bigint, reason string, bencoName string);");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 	}
