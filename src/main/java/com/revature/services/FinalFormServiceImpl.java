@@ -13,10 +13,6 @@ import com.revature.beans.User;
 import com.revature.beans.UserType;
 import com.revature.data.FinalFormDao;
 import com.revature.data.FinalFormDaoImpl;
-import com.revature.data.NotificationDao;
-import com.revature.data.NotificationDaoImpl;
-import com.revature.data.UserDao;
-import com.revature.data.UserDaoImpl;
 import com.revature.factory.BeanFactory;
 import com.revature.factory.Log;
 
@@ -53,8 +49,8 @@ public class FinalFormServiceImpl implements FinalFormService {
 		form.setUrgent(reimbursement.getUrgent());
 		form.setFilename(null);
 		
-		log.trace("Called add method in FinalFormService");
-		log.debug(form);
+		//log.trace("Called add method in FinalFormService");
+		//log.debug(form);
 		
 		finalDao.addFinalForm(form);
 		
@@ -76,7 +72,7 @@ public class FinalFormServiceImpl implements FinalFormService {
 	public FinalForm getById(String employee, UUID id) {
 		FinalForm form = finalDao.getFinalById(employee, id);
 		
-		log.trace("Called getById: " + id);
+		//log.trace("Called getById: " + id);
 		
 		return form;
 	}
@@ -91,7 +87,7 @@ public class FinalFormServiceImpl implements FinalFormService {
 	@Override
 	public void updateApproval(FinalForm finalForm) {
 		finalDao.updateApproval(finalForm);
-		log.trace("Changed approval for:" + finalForm.getId());
+		//log.trace("Changed approval for:" + finalForm.getId());
 	}
 	
 	// need delete
@@ -134,8 +130,8 @@ public class FinalFormServiceImpl implements FinalFormService {
 			
 		}
 		
-		log.trace("Called isAllowed");
-		log.debug("Returned: " + allowed);
+		//log.trace("Called isAllowed");
+		//log.debug("Returned: " + allowed);
 		
 		return allowed;
 		
