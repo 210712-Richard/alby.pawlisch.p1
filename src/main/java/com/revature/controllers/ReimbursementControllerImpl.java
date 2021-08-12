@@ -47,6 +47,7 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		
 		String employee = loggedUser.getUsername();
 		Long requestAmount = Long.parseLong(ctx.header("Reimburse-Amount"));
+		Boolean urgent = Boolean.valueOf(ctx.header("Urgent"));
 		
 		// file time
 		String filetype = ctx.header("Extension");
@@ -63,7 +64,9 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		
 		S3Util.getInstance().uploadToBucket(key, ctx.bodyAsBytes());
 		
-		Reimbursement newReimbursement = reimburseService.apply(key, employee, requestAmount);
+		Reimbursement newReimbursement = reimburseService.apply(key, employee, requestAmount, urgent);
+		
+		
 		
 		if(newReimbursement != null) {
 			ctx.status(201);
@@ -71,6 +74,7 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		} else {
 			ctx.html("Unable to make reimbursement request");
 		}
+		
 		
 	}
 	

@@ -7,7 +7,7 @@ import com.revature.beans.Reimbursement;
 
 public interface ReimbursementService {
 
-	Reimbursement apply(String reimburseForm, String loggedUser, Long requestAmount);
+	Reimbursement apply(String reimburseForm, String loggedUser, Long requestAmount, Boolean urgent);
 
 	List<Reimbursement> viewReimbursementsFromEmployee(String employee);
 
@@ -24,6 +24,8 @@ public interface ReimbursementService {
 	void depheadIsSuper(Reimbursement reimbursement, String employee, UUID id);
 
 	void updateBencoApproval(Reimbursement reimbursement, String employee, UUID id);
+
+	void isUrgent(UUID id, String employee);
 
 	
 

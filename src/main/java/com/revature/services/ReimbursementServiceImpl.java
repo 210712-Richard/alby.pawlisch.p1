@@ -31,7 +31,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 	
 	
 	@Override
-	public Reimbursement apply(String reimburseForm, String loggedUser, Long requestAmount) {
+	public Reimbursement apply(String reimburseForm, String loggedUser, Long requestAmount, Boolean urgent) {
 		// user only has to submit form, program figures out the rest
 		
 		// a lot of these are null because they change or are added to later
@@ -46,7 +46,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		reimburse.setHeadApproval(null);
 		reimburse.setBencoApproval(null);
 		// WORK OUT URGENT STUFF LATER
-		reimburse.setUrgent(false);
+		reimburse.setUrgent(urgent);
 		reimburse.setRequestAmount(requestAmount);
 		reimburse.setApprovedAmount(null);
 		
@@ -82,6 +82,11 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		// actual email is sent in controller
 		reimburseDao.updateEmail(reimbursement);
 		
+		Reimbursement reimbursementGet = viewOneReimbursement(reimbursement.getId(), reimbursement.getEmployee());
+		if (reimbursementGet.getUrgent().equals(true)) {
+			isUrgent(reimbursement.getId(), reimbursement.getEmployee());
+		}
+		
 	}
 	
 	@Override
@@ -102,6 +107,14 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		reimbursement.setEmployee(employee);
 		reimbursement.setId(id);
 		reimburseDao.updateDepheadApproval(reimbursement);
+		
+		Reimbursement reimbursementGet = viewOneReimbursement(id, employee);
+		if(reimbursementGet.getHeadApproval().equals(true)) {
+			if (reimbursementGet.getUrgent().equals(true)) {
+				isUrgent(id, employee);
+			}
+		}
+		
 	}
 	
 	@Override
@@ -112,6 +125,15 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		reimbursement.setLastApprovalDate(LocalDate.now());
 		reimbursement.setEmployee(employee);
 		reimbursement.setId(id);
+		reimburseDao.updateSuperApproval(reimbursement);
+		reimburseDao.updateDepheadApproval(reimbursement);
+		
+		Reimbursement reimbursementGet = viewOneReimbursement(id, employee);
+		if(reimbursementGet.getHeadApproval().equals(true)) {
+			if (reimbursementGet.getUrgent().equals(true)) {
+				isUrgent(id, employee);
+			}
+		}
 	}
 	
 	@Override
@@ -120,6 +142,33 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		reimbursement.setEmployee(employee);
 		reimbursement.setId(id);
 		reimburseDao.updateBencoApproval(reimbursement);
+	}
+	
+	@Override
+	public void isUrgent(UUID id, String employee) {
+		// 
+		log.trace("Called isUrgent");
+		Reimbursement reimbursement = viewOneReimbursement(id, employee);
+		try {
+			Thread.sleep(20000);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		reimbursement.setSuperApproval(true);
+		reimbursement.setLastApprovalDate(LocalDate.now());
+		reimburseDao.updateSuperApproval(reimbursement);
+		try {
+			Thread.sleep(20000);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		reimbursement.setHeadApproval(true);
+		reimbursement.setLastApprovalDate(LocalDate.now());
+		reimburseDao.updateDepheadApproval(reimbursement);
+		
+		
 	}
 	
 	
