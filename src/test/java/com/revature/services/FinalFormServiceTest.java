@@ -33,6 +33,7 @@ public class FinalFormServiceTest {
 	private static FinalForm form;
 	private static User user;
 	private static Reimbursement reimburse;
+	private static FinalForm testForm2;
 	
 	@BeforeAll
 	public static void setUpClass() {
@@ -40,6 +41,7 @@ public class FinalFormServiceTest {
 		form.setId(UUID.fromString("6e2ab9c7-a2e1-4956-bca7-c439439d8dd6"));
 		form.setEmployee("Test");
 		form.setFilename("file.docx");
+		form.setFormType(FormType.GRADE);
 		
 		user = new User();
 		user.setType(UserType.BENCO);
@@ -84,14 +86,14 @@ public class FinalFormServiceTest {
 	public void testGetById() {
 		
 		
-		service.add(reimburse, FormType.GRADE);
+		service.add(reimburse, form.getFormType());
 		
-		FinalForm testForm2 = service.getById(form.getEmployee(), form.getId());
+		testForm2 = service.getById(form.getEmployee(), form.getId());
 		
-		assertEquals(testForm2, null, "assert");
-		//assertNotEquals(form.getId(), testForm2.getId(), "Assert Id is the same");
-		//assertEquals("Test", testForm2.getEmployee(), "Assert employee is the same");
-		//assertEquals("file.docx", testForm2.getFilename(), "Assert filename is the same");
+		//assertEquals(testForm2, null, "assert");
+		assertNotEquals(form.getId(), testForm2.getId(), "Assert Id is the same");
+		assertEquals("Test", testForm2.getEmployee(), "Assert employee is the same");
+		assertEquals("file.docx", testForm2.getFilename(), "Assert filename is the same");
 	}
 	
 	// update approval
