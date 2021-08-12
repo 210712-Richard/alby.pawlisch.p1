@@ -77,8 +77,8 @@ public class FinalFormControllerImpl implements FinalFormController {
 			// do S3 stuff
 			UUID reimburseId = finalForm.getId();
 			Reimbursement reimbursement = reimburseService.viewOneReimbursement(reimburseId, employee);
-			String[] formParts = reimbursement.getReimburseForm().split(".");
-			String reimburseFormName = formParts[0];
+			String fullForm = reimbursement.getReimburseForm();
+			String reimburseFormName = fullForm.substring(0, fullForm.length() - 5);
 			
 			String filetype = ctx.header("Extension");
 			if(filetype == null) {
