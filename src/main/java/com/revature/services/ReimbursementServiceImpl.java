@@ -15,8 +15,20 @@ import com.revature.factory.Log;
 
 @Log
 public class ReimbursementServiceImpl implements ReimbursementService {
-	private Logger log = LogManager.getLogger(ReimbursementServiceImpl.class);
-	public ReimbursementDao reimburseDao = (ReimbursementDao) BeanFactory.getFactory().get(ReimbursementDao.class, ReimbursementDaoImpl.class);
+	private Logger log;
+	public ReimbursementDao reimburseDao;
+	
+	public ReimbursementServiceImpl() {
+		super();
+		log = LogManager.getLogger(ReimbursementServiceImpl.class);
+		reimburseDao = (ReimbursementDao) BeanFactory.getFactory().get(ReimbursementDao.class, ReimbursementDaoImpl.class);
+		
+	}
+	
+	public ReimbursementServiceImpl(ReimbursementDao reimburseDao2) {
+		this.reimburseDao = reimburseDao2;
+	}
+	
 	
 	@Override
 	public Reimbursement apply(String reimburseForm, String loggedUser, Long requestAmount) {
@@ -109,6 +121,8 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		reimbursement.setId(id);
 		reimburseDao.updateBencoApproval(reimbursement);
 	}
+	
+	
 	
 	
 }

@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService{
 		notifDao = (NotificationDao) BeanFactory.getFactory().get(NotificationDao.class, NotificationDaoImpl.class);
 	}
 	
-	// make constructor for tests
 	public UserServiceImpl(UserDao userDao2, NotificationDao notifDao2) {
 		this.userDao = userDao2;
 		this.notifDao = notifDao2;

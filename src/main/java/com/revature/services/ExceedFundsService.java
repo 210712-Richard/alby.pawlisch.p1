@@ -8,7 +8,7 @@ import com.revature.beans.User;
 
 public interface ExceedFundsService {
 
-	void add(Reimbursement reimbursement, String reason, User loggedUser);
+	void addExceedFunds(Reimbursement reimbursement, String reason, User loggedUser);
 
 	ExceedFunds getExceed(UUID id);
 

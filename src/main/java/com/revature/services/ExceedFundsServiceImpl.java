@@ -15,15 +15,27 @@ import com.revature.factory.Log;
 
 @Log
 public class ExceedFundsServiceImpl implements ExceedFundsService {
-	private Logger log = LogManager.getLogger(ReimbursementServiceImpl.class);
-	public ExceedFundsDao exceedDao = (ExceedFundsDao) BeanFactory.getFactory().get(ExceedFundsDao.class, ExceedFundsDaoImpl.class);
+	private Logger log;
+	public ExceedFundsDao exceedDao;
+	
+	public ExceedFundsServiceImpl() {
+		super();
+		log = LogManager.getLogger(ReimbursementServiceImpl.class);
+		exceedDao = (ExceedFundsDao) BeanFactory.getFactory().get(ExceedFundsDao.class, ExceedFundsDaoImpl.class);
 
+	}
+	
+	public ExceedFundsServiceImpl(ExceedFundsDao exceed2) {
+		this.exceedDao = exceed2;
+	}
+	
+	
 	// add method
 	// get extension reason from header, get all other data from reimbursement
 	// also loggedUser
 	@Override
-	public void add(Reimbursement reimbursement, String reason, User loggedUser) {
-		log.trace("Called add in ExceedFundsService");
+	public void addExceedFunds(Reimbursement reimbursement, String reason, User loggedUser) {
+		//log.trace("Called add in ExceedFundsService");
 		Long amount = reimbursement.getApprovedAmount() - reimbursement.getRequestAmount();
 		
 		ExceedFunds exceed = new ExceedFunds();
@@ -32,8 +44,8 @@ public class ExceedFundsServiceImpl implements ExceedFundsService {
 		exceed.setReason(reason);
 		exceed.setBencoName(loggedUser.getUsername());
 		
-		log.trace("Created new exceed funds");
-		log.debug(exceed);
+		//log.trace("Created new exceed funds");
+		//log.debug(exceed);
 		
 		exceedDao.addExceedFunds(exceed);
 		

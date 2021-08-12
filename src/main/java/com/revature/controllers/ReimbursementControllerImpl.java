@@ -295,7 +295,7 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 			else {
 				ctx.status(403);
 				if (superApproval.equals(false)) {
-					ctx.html("Supervisor has denied reimbursement");
+					ctx.status(403);
 				}
 			}
 			
@@ -341,7 +341,7 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 						ctx.html("Need reason for exceeding funds");
 					}
 					
-					exceedService.add(reimbursement, reason, loggedUser);
+					exceedService.addExceedFunds(reimbursement, reason, loggedUser);
 					
 				}
 				

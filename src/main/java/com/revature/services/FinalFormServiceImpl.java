@@ -13,14 +13,32 @@ import com.revature.beans.User;
 import com.revature.beans.UserType;
 import com.revature.data.FinalFormDao;
 import com.revature.data.FinalFormDaoImpl;
+import com.revature.data.NotificationDao;
+import com.revature.data.NotificationDaoImpl;
+import com.revature.data.UserDao;
+import com.revature.data.UserDaoImpl;
 import com.revature.factory.BeanFactory;
 import com.revature.factory.Log;
 
 @Log
 public class FinalFormServiceImpl implements FinalFormService {
-	private Logger log = LogManager.getLogger(ReimbursementServiceImpl.class);
-	public FinalFormDao finalDao = (FinalFormDao) BeanFactory.getFactory().get(FinalFormDao.class, FinalFormDaoImpl.class);
-	public UserService userService = (UserService) BeanFactory.getFactory().get(UserService.class, UserServiceImpl.class); 
+	private Logger log;
+	public FinalFormDao finalDao; 
+	public UserService userService;
+	
+	 public FinalFormServiceImpl() {
+		super();
+		log = LogManager.getLogger(ReimbursementServiceImpl.class);
+		finalDao = (FinalFormDao) BeanFactory.getFactory().get(FinalFormDao.class, FinalFormDaoImpl.class);
+		userService = (UserService) BeanFactory.getFactory().get(UserService.class, UserServiceImpl.class); 
+		
+	}
+	
+	public FinalFormServiceImpl(FinalFormDao finalDao2, UserService userServe2) {
+		this.finalDao = finalDao2;
+		this.userService = userServe2;
+	}
+	 
 	
 	// create
 	// gets reimbursement and pulls a lot of data from that

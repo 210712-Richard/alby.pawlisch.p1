@@ -2,6 +2,8 @@ package com.revature.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,12 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.revature.beans.User;
+import com.revature.beans.UserType;
 import com.revature.data.NotificationDao;
 import com.revature.data.UserDao;
 
 public class UserServiceTest {
 	private static UserServiceImpl service;
 	private static User user;
+	private static User user2;
 	private static UserDao userDao;
 	private static NotificationDao notifDao;
 
@@ -24,6 +28,13 @@ public class UserServiceTest {
 		user.setUsername("Test");
 		user.setSupervisor("Supervisor");
 		user.setDephead("Dephead");
+		user.setType(UserType.EMPLOYEE);
+		
+		user2 = new User();
+		user2.setUsername("Benco");
+		user2.setType(UserType.BENCO);
+		
+		
 	}
 
 	@BeforeEach
@@ -77,6 +88,19 @@ public class UserServiceTest {
 	  
 		  assertNotEquals(username, user.getDephead(),"Asserting they are not the dephead"); 
 	  }
+	  
+	  @Test
+	  public void testIsBencoTrue() {
+		  
+		  assertEquals(UserType.BENCO, user2.getType(), "Asserting User2 is a Benco");
+	  }
+	  
+	  @Test
+	  public void testIsBencoFalse() {
+		  assertNotEquals(UserType.BENCO, user.getType(), "Asserting User2 is a Benco");
+	  }
+	  
+	  
 	  
 	  
 	  
