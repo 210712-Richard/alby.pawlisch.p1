@@ -27,7 +27,7 @@ public class FinalFormServiceImpl implements FinalFormService {
 	@Override
 	public FinalForm add(Reimbursement reimbursement, FormType formType) {
 		FinalForm form = new FinalForm();
-		form.setReimburseId(reimbursement.getId());
+		form.setId(reimbursement.getId());
 		form.setEmployee(reimbursement.getEmployee());
 		form.setApproved(null);
 		form.setSubmissionDate(reimbursement.getSubmissionDate());
@@ -35,7 +35,7 @@ public class FinalFormServiceImpl implements FinalFormService {
 		form.setUrgent(reimbursement.getUrgent());
 		form.setFilename(null);
 		
-		log.trace("Called add method in Service");
+		log.trace("Called add method in FinalFormService");
 		log.debug(form);
 		
 		finalDao.addFinalForm(form);

@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.revature.beans.FinalForm;
 import com.revature.beans.Reimbursement;
 import com.revature.beans.User;
+import com.revature.beans.UserType;
 import com.revature.factory.BeanFactory;
 import com.revature.factory.Log;
 import com.revature.services.FinalFormService;
@@ -28,11 +29,9 @@ public class FinalFormControllerImpl implements FinalFormController {
 	public void employeeForms(Context ctx) {
 		User loggedUser = ctx.sessionAttribute("loggedUser");
 		String employee = ctx.pathParam("employee");
-		UUID formId = UUID.fromString(ctx.pathParam("formId"));
-		FinalForm form = finalService.getById(employee, formId);
 		
 		if(employee.equals(loggedUser.getUsername())
-				|| finalService.isAllowed(form, loggedUser).equals(true)) {
+				|| loggedUser.getType().equals(UserType.BENCO)) {
 			// get all forms from employee
 			List<FinalForm> list = finalService.getByEmployee(employee);
 			ctx.json(list);
@@ -76,7 +75,7 @@ public class FinalFormControllerImpl implements FinalFormController {
 		
 		if(employee.equals(loggedUser.getUsername())) {
 			// do S3 stuff
-			UUID reimburseId = finalForm.getReimburseId();
+			UUID reimburseId = finalForm.getId();
 			Reimbursement reimbursement = reimburseService.viewOneReimbursement(reimburseId, employee);
 			String[] formParts = reimbursement.getReimburseForm().split(".");
 			String reimburseFormName = formParts[0];

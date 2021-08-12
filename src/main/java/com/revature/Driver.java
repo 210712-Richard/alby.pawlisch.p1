@@ -103,7 +103,7 @@ public class Driver {
 		app.put("/reimbursements/:employee/:reimburseId/approval/benefits", reimbursementControl::bencoApproval);
 		
 		// view final forms from an employee
-		app.get("/finalforms/:employee/", finalControl::employeeForms);
+		app.get("/finalforms/:employee", finalControl::employeeForms);
 		
 		// view one final form
 		app.get("/finalforms/:employee/:formId", finalControl::getForm);

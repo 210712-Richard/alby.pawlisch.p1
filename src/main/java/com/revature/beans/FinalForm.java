@@ -6,7 +6,6 @@ import java.util.UUID;
 
 public class FinalForm implements Serializable {
 	private UUID id;
-	private UUID reimburseId;
 	private String employee;
 	private Boolean approved;
 	private LocalDate submissionDate;
@@ -18,11 +17,10 @@ public class FinalForm implements Serializable {
 		super();
 	}
 
-	public FinalForm(UUID id, UUID reimburseId, String employee, Boolean approved, LocalDate submissionDate, FormType formType, Boolean urgent,
+	public FinalForm(UUID id, String employee, Boolean approved, LocalDate submissionDate, FormType formType, Boolean urgent,
 			String filename) {
 		this();
 		this.id = id;
-		this.reimburseId = reimburseId;
 		this.employee = employee;
 		this.approved = approved;
 		this.submissionDate = submissionDate;
@@ -37,14 +35,6 @@ public class FinalForm implements Serializable {
 
 	public void setId(UUID id) {
 		this.id = id;
-	}
-	
-	public UUID getReimburseId() {
-		return id;
-	}
-
-	public void setReimburseId(UUID reimburseId) {
-		this.reimburseId = reimburseId;
 	}
 
 	public String getEmployee() {
@@ -104,7 +94,6 @@ public class FinalForm implements Serializable {
 		result = prime * result + ((filename == null) ? 0 : filename.hashCode());
 		result = prime * result + ((formType == null) ? 0 : formType.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((reimburseId == null) ? 0 : reimburseId.hashCode());
 		result = prime * result + ((submissionDate == null) ? 0 : submissionDate.hashCode());
 		result = prime * result + ((urgent == null) ? 0 : urgent.hashCode());
 		return result;
@@ -141,11 +130,6 @@ public class FinalForm implements Serializable {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (reimburseId == null) {
-			if (other.reimburseId != null)
-				return false;
-		} else if (!reimburseId.equals(other.reimburseId))
-			return false;
 		if (submissionDate == null) {
 			if (other.submissionDate != null)
 				return false;
@@ -161,10 +145,11 @@ public class FinalForm implements Serializable {
 
 	@Override
 	public String toString() {
-		return "FinalForm [id=" + id + ", reimburseId=" + reimburseId + ", employee=" + employee + ", approved="
-				+ approved + ", submissionDate=" + submissionDate + ", formType=" + formType + ", urgent=" + urgent
-				+ ", filename=" + filename + "]";
+		return "FinalForm [id=" + id + ", employee=" + employee + ", approved=" + approved + ", submissionDate="
+				+ submissionDate + ", formType=" + formType + ", urgent=" + urgent + ", filename=" + filename + "]";
 	}
+
+
 	
 	
 	

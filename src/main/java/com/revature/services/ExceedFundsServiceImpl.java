@@ -23,6 +23,7 @@ public class ExceedFundsServiceImpl implements ExceedFundsService {
 	// also loggedUser
 	@Override
 	public void add(Reimbursement reimbursement, String reason, User loggedUser) {
+		log.trace("Called add in ExceedFundsService");
 		Long amount = reimbursement.getApprovedAmount() - reimbursement.getRequestAmount();
 		
 		ExceedFunds exceed = new ExceedFunds();

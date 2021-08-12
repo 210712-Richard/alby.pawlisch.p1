@@ -320,27 +320,35 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		if(loggedUser.getType().equals(UserType.BENCO)) {
 			// calls both finalForm AND reimbursement
 			// and eventually, add for exceedingFunds if necessary
-			
+			log.trace("Updating Benco approval");
 			// reimbursement setup
 			Reimbursement updateReimbursement = ctx.bodyAsClass(Reimbursement.class);
 			reimburseService.updateBencoApproval(updateReimbursement, employee, reimburseId);
 			
 			// final form part, approved amount in body
-			Reimbursement reimbursement = reimburseService.viewOneReimbursement(reimburseId, employee);
-			FormType formType = FormType.valueOf(ctx.header("FormType"));
-			finalService.add(reimbursement, formType);
-			
-			Long approveAmount = updateReimbursement.getApprovedAmount();
-			if(approveAmount > reimbursement.getRequestAmount()) {
-				String reason = ctx.header("Reason");
-				if(reason.equals(null)) {
-					ctx.status(400);
-					ctx.html("Need reason for exceeding funds");
-				}
-				Reimbursement refreshReimbursement =  reimburseService.viewOneReimbursement(reimburseId, employee);
-				exceedService.add(refreshReimbursement, reason, loggedUser);
+			if(updateReimbursement.getBencoApproval().equals(true)) {
+				Reimbursement reimbursement = reimburseService.viewOneReimbursement(reimburseId, employee);
+				log.debug("Retrieved reimbursement: "+ reimbursement);
+				FormType formType = FormType.valueOf(ctx.header("FormType"));
+				FinalForm form = finalService.add(reimbursement, formType);
 				
+				if(reimbursement.getApprovedAmount() > reimbursement.getRequestAmount()) {
+					// exceeds funds
+					log.trace("Approved amount exceeds funds");
+					String reason = ctx.header("Reason");
+					if(reason.equals(null)) {
+						ctx.status(400);
+						ctx.html("Need reason for exceeding funds");
+					}
+					
+					exceedService.add(reimbursement, reason, loggedUser);
+					
+				}
+				
+				ctx.status(200);
+				ctx.json(form);
 			}
+			
 			
 			ctx.status(201);
 			

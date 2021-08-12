@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.DefaultConsistencyLevel;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
@@ -14,24 +17,26 @@ import com.datastax.oss.driver.api.core.cql.SimpleStatementBuilder;
 import com.revature.beans.FinalForm;
 import com.revature.beans.FormType;
 import com.revature.factory.Log;
+import com.revature.services.ReimbursementServiceImpl;
 import com.revature.util.CassandraUtil;
 
 @Log
 public class FinalFormDaoImpl implements FinalFormDao {
+	private Logger log = LogManager.getLogger(ReimbursementServiceImpl.class);
 	
 	private CqlSession session = CassandraUtil.getInstance().getSession();
 	
 	// creation method
 	@Override
 	public void addFinalForm(FinalForm finalForm) {
-		String query = "Insert into finalForm (id, reimburseId, employee, approved, submissionDate,"
-				+ " formType, urgent, filename) values (?, ?, ?, ?, ?, ?, ?, ?);";
-		UUID id = UUID.randomUUID();
+		String query = "Insert into finalForm (id, employee, approved, submissionDate,"
+				+ " formType, urgent, filename) values (?, ?, ?, ?, ?, ?, ?);";
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM)
 				.build();
 		BoundStatement bound = session.prepare(simple)
-				.bind(id, finalForm.getReimburseId(), finalForm.getEmployee(), finalForm.getApproved(), finalForm.getSubmissionDate(),
-						finalForm.getFormType(), finalForm.getUrgent(), finalForm.getFilename());
+				.bind(finalForm.getId(), finalForm.getEmployee(), finalForm.getApproved(), finalForm.getSubmissionDate(),
+						finalForm.getFormType().toString(), finalForm.getUrgent(), finalForm.getFilename());
+		log.debug("In FinalDao: "+finalForm.getId());
 		session.execute(bound);
 	}
 	
@@ -50,7 +55,6 @@ public class FinalFormDaoImpl implements FinalFormDao {
 		
 		FinalForm form = new FinalForm();
 		form.setId(row.getUuid("id"));
-		form.setReimburseId(row.getUuid("reimburseId"));
 		form.setEmployee(row.getString("employee"));
 		form.setApproved(row.getBoolean("approved"));
 		form.setSubmissionDate(row.getLocalDate("submissionDate"));
@@ -74,7 +78,6 @@ public class FinalFormDaoImpl implements FinalFormDao {
 		results.forEach(row ->{
 			FinalForm form = new FinalForm();
 			form.setId(row.getUuid("id"));
-			form.setReimburseId(row.getUuid("reimburseId"));
 			form.setEmployee(row.getString("employee"));
 			form.setApproved(row.getBoolean("approved"));
 			form.setSubmissionDate(row.getLocalDate("submissionDate"));
