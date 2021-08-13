@@ -25,16 +25,17 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public void addUser(User user) {
-		String query = "Insert into user (username, email, type, supervisor, dephead, inbox) values (?, ?, ?, ?, ?, ?);";
+		String query = "Insert into user (username, email, type, supervisor, dephead, inbox, availableFunds, usedFunds, pendingFunds) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		SimpleStatement s = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
 		BoundStatement bound = session.prepare(s)
-				.bind(user.getUsername(), user.getEmail(), user.getType().toString(), user.getSupervisor(), user.getDephead(), user.getInbox());
+				.bind(user.getUsername(), user.getEmail(), user.getType().toString(), user.getSupervisor(), user.getDephead(), user.getInbox(),
+						1000l, 0l, 0l);
 		session.execute(bound);
 	}
 	
 	@Override
 	public List<User> getUsers() {
-		String query = "Select username, email, type, supervisor, dephead from user";
+		String query = "Select * from user";
 		SimpleStatement s = new SimpleStatementBuilder(query).build();
 		ResultSet rs = session.execute(s);
 		List<User> users = new ArrayList<>();
@@ -45,6 +46,9 @@ public class UserDaoImpl implements UserDao {
 			user.setType(UserType.valueOf(row.getString("type")));
 			user.setSupervisor(row.getString("supervisor"));
 			user.setDephead(row.getString("dephead"));
+			user.setAvailableFunds(row.getLong("availableFunds"));
+			user.setUsedFunds(row.getLong("usedFunds"));
+			user.setPendingFunds(row.getLong("pendingFunds"));
 			
 			users.add(user);
 		});
@@ -55,7 +59,7 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public User getUser(String username) {
-		String query = "Select username, email, type, supervisor, dephead from user where username=?";
+		String query = "Select * from user where username=?";
 		SimpleStatement s = new SimpleStatementBuilder(query).build();
 		BoundStatement bound = session.prepare(s).bind(username);
 		
@@ -70,6 +74,9 @@ public class UserDaoImpl implements UserDao {
 		user.setType(UserType.valueOf(row.getString("type")));
 		user.setSupervisor(row.getString("supervisor"));
 		user.setDephead(row.getString("dephead"));
+		user.setAvailableFunds(row.getLong("availableFunds"));
+		user.setUsedFunds(row.getLong("usedFunds"));
+		user.setPendingFunds(row.getLong("pendingFunds"));
 		
 		return user;
 		
@@ -94,7 +101,7 @@ public class UserDaoImpl implements UserDao {
 	public List<Notification> getUserInbox(String username) {
 		
 		List<Notification> notifs = new ArrayList<Notification>();
-		String query = "Select id, receiver, message, sentDate from receivednotif where receiver=?";
+		String query = "Select id, receiver, message, sentDate from notification where receiver=?";
 		SimpleStatement simple = new SimpleStatementBuilder(query).build();
 		BoundStatement bound = session.prepare(simple).bind(username);
 		
@@ -112,6 +119,33 @@ public class UserDaoImpl implements UserDao {
 		
 		return notifs;
 		
+	}
+	
+	@Override
+	public void changeUsedAmount(User user) {
+		String query = "Update user set usedFunds = ? where username = ?";
+		SimpleStatement s = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
+		BoundStatement bound = session.prepare(s)
+				.bind(user.getUsedFunds(), user.getUsername());
+		session.execute(bound);
+	}
+	
+	@Override
+	public void changePendingAmount(User user) {
+		String query = "Update user set pendingFunds = ? where username = ?";
+		SimpleStatement s = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
+		BoundStatement bound = session.prepare(s)
+				.bind(user.getPendingFunds(), user.getUsername());
+		session.execute(bound);
+	}
+	
+	@Override
+	public void changeAvailableAmount(User user) {
+		String query = "Update user set availableFunds = ? where username = ?";
+		SimpleStatement s = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
+		BoundStatement bound = session.prepare(s)
+				.bind(user.getAvailableFunds(), user.getUsername());
+		session.execute(bound);
 	}
 	
 	

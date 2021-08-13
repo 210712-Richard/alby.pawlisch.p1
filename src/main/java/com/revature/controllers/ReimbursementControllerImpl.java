@@ -48,6 +48,16 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		String employee = loggedUser.getUsername();
 		Long requestAmount = Long.parseLong(ctx.header("Reimburse-Amount"));
 		Boolean urgent = Boolean.valueOf(ctx.header("Urgent"));
+		String classType = ctx.header("ClassType");
+		User employeeUser = userService.getUser(employee);
+		
+		if (classType.equals(null)) {
+			ctx.status(400);
+			return;
+		}
+		
+		Long amount = employeeUser.getPendingFunds() + requestAmount;
+		userService.changePendingAmount(employee, amount);
 		
 		// file time
 		String filetype = ctx.header("Extension");
@@ -64,7 +74,7 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		
 		S3Util.getInstance().uploadToBucket(key, ctx.bodyAsBytes());
 		
-		Reimbursement newReimbursement = reimburseService.apply(key, employee, requestAmount, urgent);
+		Reimbursement newReimbursement = reimburseService.apply(key, employee, requestAmount, urgent, classType);
 		
 		
 		
@@ -291,7 +301,7 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 				ctx.status(201);
 				return;
 				
-			} if (superNull.equals(null)) {
+			} if (loggedUser.getSupervisor().equals(loggedUser.getDephead())) {
 				reimburseService.depheadIsSuper(reimburseApprove, employee, reimburseId);
 				ctx.status(201);
 				return;
@@ -336,18 +346,25 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 				FormType formType = FormType.valueOf(ctx.header("FormType"));
 				FinalForm form = finalService.add(reimbursement, formType);
 				
-				if(reimbursement.getApprovedAmount() > reimbursement.getRequestAmount()) {
-					// exceeds funds
+				User changeUser = userService.getUser(employee);
+				
+				Long pendingAmount = changeUser.getPendingFunds() - reimbursement.getRequestAmount();
+				Long usedAmount = changeUser.getUsedFunds() + reimbursement.getApprovedAmount();
+				userService.changePendingAmount(reimbursement.getEmployee(), pendingAmount);
+				userService.changeUsedAmount(reimbursement.getEmployee(), usedAmount);
+				
+				User user = userService.getUser(reimbursement.getEmployee());
+				
+				if(user.getAvailableFunds() < 0) {
 					log.trace("Approved amount exceeds funds");
 					String reason = ctx.header("Reason");
 					if(reason.equals(null)) {
 						ctx.status(400);
 						ctx.html("Need reason for exceeding funds");
 					}
-					
 					exceedService.addExceedFunds(reimbursement, reason, loggedUser);
-					
 				}
+				
 				
 				ctx.status(200);
 				ctx.json(form);

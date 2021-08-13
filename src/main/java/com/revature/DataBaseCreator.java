@@ -30,7 +30,8 @@ public class DataBaseCreator {
 	public static void createTables() {
 		StringBuilder stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS User (")
 				.append("username text PRIMARY KEY, email text, type text, ")
-				.append("supervisor text, dephead text, inbox list<uuid> );");
+				.append("supervisor text, dephead text, usedFunds bigint, ")
+				.append("inbox list<uuid>, pendingFunds bigint, availableFunds bigint);");
 		CassandraUtil.getInstance().getSession().execute(stringBuild.toString());
 		
 		stringBuild = new StringBuilder("CREATE TABLE IF NOT EXISTS Notification (")
@@ -61,15 +62,15 @@ public class DataBaseCreator {
 	
 	public static void populateUserTable() {
 		// SUPERVISORS
-		User user = new User("Jason", "redhood@bat.com", "Bruce" );
+		User user = new User("Jason", "redhood@bat.com", "Bruce");
 		user.setType(UserType.SUPERVISOR);
 		userDao.addUser(user);
-		User user2 = new User("Barbara", "batgirl@bat.com", "Bruce" );
+		User user2 = new User("Barbara", "batgirl@bat.com", "Bruce");
 		user2.setType(UserType.SUPERVISOR);
 		userDao.addUser(user2);
 		
 		// DEPARTMENT HEAD USERS
-		User user3 = new User("Bruce", "thebat@bat.com", "Alfred" );
+		User user3 = new User("Bruce", "thebat@bat.com", "Alfred");
 		user3.setType(UserType.HEAD);
 		userDao.addUser(user3);
 		User userCEO = new User("Alfred", "butler@bat.com");
@@ -77,7 +78,7 @@ public class DataBaseCreator {
 		userDao.addUser(userCEO);
 		
 		// BENCO USERS
-		User user4 = new User("Gordon", "cop@bat.com", "Dolores" );
+		User user4 = new User("Gordon", "cop@bat.com", "Dolores");
 		user4.setType(UserType.BENCO);
 		userDao.addUser(user4);
 		User user5 = new User("Dolores", "holy@bat.com", "Alfred");

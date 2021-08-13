@@ -19,6 +19,12 @@ public interface UserService {
 	
 	Boolean allowedAccess(String username, String employee);
 
+	void changeAvailableAmount(String employee);
+
+	void changePendingAmount(String employee, Long amount);
+
+	void changeUsedAmount(String employee, Long amount);
+
 	
 
 }

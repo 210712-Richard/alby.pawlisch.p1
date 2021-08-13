@@ -29,6 +29,9 @@ public class UserServiceTest {
 		user.setSupervisor("Supervisor");
 		user.setDephead("Dephead");
 		user.setType(UserType.EMPLOYEE);
+		user.setPendingFunds(500l);
+		user.setUsedFunds(200l);
+		user.setAvailableFunds(1000l);
 		
 		user2 = new User();
 		user2.setUsername("Benco");
@@ -98,6 +101,19 @@ public class UserServiceTest {
 	  @Test
 	  public void testIsBencoFalse() {
 		  assertNotEquals(UserType.BENCO, user.getType(), "Asserting User2 is a Benco");
+	  }
+	  
+	  @Test
+	  public void testPendingChange() {
+		  /*
+		  Long pendingAmount = 500l - 500l;
+		  Long usedAmount = 0l + 500l;
+		  service.changePendingAmount(user.getUsername(), pendingAmount);
+		  service.changeUsedAmount(user.getUsername(), usedAmount);
+		  
+		  assertEquals(user.getPendingFunds(), 0l, "Assert changePending was successful");
+		  assertEquals(user.getUsedFunds(), 700l, "Assert changePending was successful");
+		  */
 	  }
 	  
 	  

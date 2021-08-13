@@ -17,4 +17,10 @@ public interface UserDao {
 	
 	public List<Notification> getUserInbox(String username);
 
+	void changeAvailableAmount(User user);
+
+	void changeUsedAmount(User user);
+
+	void changePendingAmount(User user);
+
 }

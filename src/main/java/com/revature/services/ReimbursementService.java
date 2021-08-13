@@ -7,7 +7,7 @@ import com.revature.beans.Reimbursement;
 
 public interface ReimbursementService {
 
-	Reimbursement apply(String reimburseForm, String loggedUser, Long requestAmount, Boolean urgent);
+	Reimbursement apply(String reimburseForm, String loggedUser, Long requestAmount, Boolean urgent, String classType);
 
 	List<Reimbursement> viewReimbursementsFromEmployee(String employee);
 

@@ -23,10 +23,11 @@ public class NotificationDaoImpl implements NotificationDao {
 	
 	@Override
 	public void addNotif(Notification notif) {
-		String query = "Insert into notification (receiver, message, sentDate) values (?, ?, ?);";
+		String query = "Insert into notification (id, receiver, message, sentDate) values (?, ?, ?, ?);";
+		UUID id = UUID.randomUUID();
 		SimpleStatement simple = new SimpleStatementBuilder(query).setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
 		BoundStatement bound = session.prepare(simple)
-				.bind(notif.getReciever(), notif.getMessage(), notif.getSentDate());
+				.bind(id, notif.getReciever(), notif.getMessage(), notif.getSentDate());
 		session.execute(bound);
 		
 	}

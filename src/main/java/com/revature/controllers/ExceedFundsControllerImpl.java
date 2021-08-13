@@ -1,5 +1,6 @@
 package com.revature.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -43,6 +44,21 @@ public class ExceedFundsControllerImpl implements ExceedFundsController {
 		}
 		
 		
+	}
+	
+	@Override
+	public void getAllExceedFunds(Context ctx) {
+		log.trace("Called get ExceedFunds");
+		log.debug("Viewing all exceed funds");
+		
+		User loggedUser = ctx.sessionAttribute("loggedUser");
+		
+		if(loggedUser.getType().equals(UserType.BENCO)) {
+			List<ExceedFunds> exceeds = exceedService.getAllExceed();
+			ctx.json(exceeds);
+		} else {
+			ctx.status(403);
+		}
 	}
 	
 	// delete method is in reimbursement controller

@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -36,7 +37,7 @@ public class ExceedFundsServiceImpl implements ExceedFundsService {
 	@Override
 	public void addExceedFunds(Reimbursement reimbursement, String reason, User loggedUser) {
 		//log.trace("Called add in ExceedFundsService");
-		Long amount = reimbursement.getApprovedAmount() - reimbursement.getRequestAmount();
+		Long amount = reimbursement.getApprovedAmount();
 		
 		ExceedFunds exceed = new ExceedFunds();
 		exceed.setId(reimbursement.getId());
@@ -60,6 +61,16 @@ public class ExceedFundsServiceImpl implements ExceedFundsService {
 		log.debug(exceed);
 		
 		return exceed;
+	}
+	
+	@Override
+	public List<ExceedFunds> getAllExceed() {
+		log.trace("Called getAllExceed");
+		List<ExceedFunds> exceeds = exceedDao.viewAllExceedFunds();
+		
+		//log.debug(exceeds);
+		
+		return exceeds;
 	}
 	
 	// delete method

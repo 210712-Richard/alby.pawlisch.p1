@@ -8,6 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.revature.beans.Reimbursement;
+import com.revature.data.NotificationDao;
+import com.revature.data.NotificationDaoImpl;
 import com.revature.data.ReimbursementDao;
 import com.revature.data.ReimbursementDaoImpl;
 import com.revature.factory.BeanFactory;
@@ -17,11 +19,15 @@ import com.revature.factory.Log;
 public class ReimbursementServiceImpl implements ReimbursementService {
 	private Logger log;
 	public ReimbursementDao reimburseDao;
+	public NotificationService notifService;
+	public UserService userService;
 	
 	public ReimbursementServiceImpl() {
 		super();
 		log = LogManager.getLogger(ReimbursementServiceImpl.class);
 		reimburseDao = (ReimbursementDao) BeanFactory.getFactory().get(ReimbursementDao.class, ReimbursementDaoImpl.class);
+		notifService = (NotificationService) BeanFactory.getFactory().get(NotificationService.class, NotificationServiceImpl.class);
+		userService = (UserService) BeanFactory.getFactory().get(UserService.class, UserServiceImpl.class);
 		
 	}
 	
@@ -31,10 +37,39 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 	
 	
 	@Override
-	public Reimbursement apply(String reimburseForm, String loggedUser, Long requestAmount, Boolean urgent) {
+	public Reimbursement apply(String reimburseForm, String loggedUser, Long requestAmount, Boolean urgent, String classType) {
 		// user only has to submit form, program figures out the rest
 		
 		// a lot of these are null because they change or are added to later
+		
+		//COURSE, SEMINAR, PREP, CERTIF, TECH, OTHER
+		Double percentage = 0.0;
+		if (classType.equals("COURSE")) {
+			// 80%
+			percentage = .8;
+		}
+		if (classType.equals("SEMINAR")) {
+			// 60
+			percentage = .6;
+		}
+		if (classType.equals("PREP")) {
+			// 75
+			percentage = .75;
+		}
+		if (classType.equals("CERTIF")) {
+			// 100
+			percentage = 1.0;
+		}
+		if (classType.equals("TECH")) {
+			// 90
+			percentage = .9;
+		}
+		if (classType.equals("OTHER")) {
+			// 30
+			percentage = .3;
+		}
+		
+		Long predictedAmount = Math.round(requestAmount*percentage);
 		
 		Reimbursement reimburse = new Reimbursement();
 		reimburse.setEmployee(loggedUser);
@@ -45,15 +80,15 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		reimburse.setSuperApproval(null);
 		reimburse.setHeadApproval(null);
 		reimburse.setBencoApproval(null);
-		// WORK OUT URGENT STUFF LATER
 		reimburse.setUrgent(urgent);
-		reimburse.setRequestAmount(requestAmount);
+		reimburse.setRequestAmount(predictedAmount);
 		reimburse.setApprovedAmount(null);
 		
 		//log.trace("Called apply method in Service");
 		//log.debug(reimburse);
 		
 		reimburseDao.addReimbursement(reimburse);
+		//userService.changePendingAmount(loggedUser, requestAmount);
 		
 		return reimburse;
 		
@@ -143,6 +178,14 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		reimbursement.setEmployee(employee);
 		reimbursement.setId(id);
 		reimburseDao.updateBencoApproval(reimbursement);
+		userService.changeUsedAmount(employee, reimbursement.getApprovedAmount());
+		
+		Reimbursement old = viewOneReimbursement(id, employee);
+		reimbursement.setSubmissionDate(old.getSubmissionDate());
+		reimbursement.setRequestAmount(old.getRequestAmount());
+		if (reimbursement.getRequestAmount() != reimbursement.getApprovedAmount()) {
+			notifService.sendChangeAmountNotif(reimbursement);
+		}
 	}
 	
 	@Override

@@ -21,11 +21,13 @@ import com.revature.factory.Log;
 public class UserServiceImpl implements UserService{
 	public UserDao userDao;
 	public NotificationDao notifDao;
+	public Logger log;
 	
 	public UserServiceImpl() {
 		super();
 		userDao = (UserDao) BeanFactory.getFactory().get(UserDao.class, UserDaoImpl.class);
 		notifDao = (NotificationDao) BeanFactory.getFactory().get(NotificationDao.class, NotificationDaoImpl.class);
+		log = LogManager.getLogger(ReimbursementServiceImpl.class);
 	}
 	
 	public UserServiceImpl(UserDao userDao2, NotificationDao notifDao2) {
@@ -108,6 +110,37 @@ public class UserServiceImpl implements UserService{
 		
 		return allowed;
 		
+	}
+	
+	@Override
+	public void changeAvailableAmount(String employee) {
+		log.trace("Called changeAvailableAmount");
+		User user = getUser(employee);
+		log.debug(user.getPendingFunds() + ", " + user.getUsedFunds());
+		Long availableFunds = 1000 - user.getPendingFunds() - user.getUsedFunds();
+		user.setAvailableFunds(availableFunds);
+		userDao.changeAvailableAmount(user);
+		
+	}
+	
+	@Override
+	public void changePendingAmount(String employee, Long amount) {
+		//log.trace("Called changePendingAmount");
+		User user = getUser(employee);
+		//log.debug(user.getPendingFunds());
+		user.setPendingFunds(amount);
+		userDao.changePendingAmount(user);
+		changeAvailableAmount(employee);
+		
+	}
+	
+	@Override
+	public void changeUsedAmount(String employee, Long amount) {
+		//log.trace("Called changeUsedAmount");
+		User user = getUser(employee);
+		user.setUsedFunds(amount);
+		userDao.changeUsedAmount(user);
+		changeAvailableAmount(employee);
 	}
 
 	

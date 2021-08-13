@@ -32,13 +32,13 @@ public class Driver {
 	public static void instantiateDatabase() {
 		DataBaseCreator.dropTables();
 		try {
-			Thread.sleep(30000); 
+			Thread.sleep(40000); 
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		DataBaseCreator.createTables();
 		try {
-			Thread.sleep(30000); 
+			Thread.sleep(40000); 
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -61,7 +61,7 @@ public class Driver {
 		ReimbursementController reimbursementControl = (ReimbursementController) BeanFactory.getFactory().get(ReimbursementController.class, ReimbursementControllerImpl.class);
 		FinalFormController finalControl = (FinalFormController) BeanFactory.getFactory().get(FinalFormController.class, FinalFormControllerImpl.class);
 		ExceedFundsController exceedControl = (ExceedFundsController) BeanFactory.getFactory().get(ExceedFundsController.class, ExceedFundsControllerImpl.class);
-		app.get("/", (ctx)->ctx.html("Hello Project 1"));
+		//app.get("/", (ctx)->ctx.html("Hello Project 1"));
 		
 		// login
 		app.post("/users", userControl::login);
@@ -119,6 +119,9 @@ public class Driver {
 		
 		// get an exceed funds thing
 		app.get("/exceedsfunds/:fundsId", exceedControl::getExceedFunds);
+		
+		// get all exceeded funds
+		app.get("/exceedsfunds", exceedControl::getAllExceedFunds);
 		
 	}
 	

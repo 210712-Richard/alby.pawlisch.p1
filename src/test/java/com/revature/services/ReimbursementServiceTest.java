@@ -58,7 +58,7 @@ public class ReimbursementServiceTest {
 		Long requestAmount = 10l;
 		Boolean urgent = true;
 		
-		service.apply(reimburseForm, user.getUsername(), requestAmount, urgent);
+		service.apply(reimburseForm, user.getUsername(), requestAmount, urgent, "CERTIF");
 		
 		ArgumentCaptor<Reimbursement> captor = ArgumentCaptor.forClass(Reimbursement.class);
 		
@@ -76,7 +76,7 @@ public class ReimbursementServiceTest {
 	@Test
 	public void testViewOneReimbursement() {
 		service.apply(reimburse.getReimburseForm(),user.getUsername(),
-				reimburse.getRequestAmount(), reimburse.getUrgent());
+				reimburse.getRequestAmount(), reimburse.getUrgent(), "CERTIF");
 		
 		ArgumentCaptor<Reimbursement> captor = ArgumentCaptor.forClass(Reimbursement.class);
 		

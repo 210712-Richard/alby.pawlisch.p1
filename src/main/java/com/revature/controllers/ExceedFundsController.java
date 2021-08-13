@@ -6,4 +6,6 @@ public interface ExceedFundsController {
 
 	void getExceedFunds(Context ctx);
 
+	void getAllExceedFunds(Context ctx);
+
 }
