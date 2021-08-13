@@ -271,7 +271,7 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 		String employee = ctx.pathParam("employee");
 		UUID reimburseId = UUID.fromString(ctx.pathParam("reimburseId"));
 		String loggedUsername = loggedUser.getUsername();
-		String superNull = userService.getUser(employee).getSupervisor();
+		//String superNull = userService.getUser(employee).getSupervisor();
 		Reimbursement reimburseApprove = ctx.bodyAsClass(Reimbursement.class);
 		
 		Boolean supervisor = userService.isSupervisor(loggedUsername, employee);
@@ -301,11 +301,12 @@ public class ReimbursementControllerImpl implements ReimbursementController {
 				ctx.status(201);
 				return;
 				
-			} if (loggedUser.getSupervisor().equals(loggedUser.getDephead())) {
+			}
+			/*if (loggedUser.getSupervisor().equals(loggedUser.getDephead())) {
 				reimburseService.depheadIsSuper(reimburseApprove, employee, reimburseId);
 				ctx.status(201);
 				return;
-			}
+			}*/
 			else {
 				ctx.status(403);
 				if (superApproval.equals(false)) {
