@@ -1,12 +1,9 @@
 package com.revature.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,15 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import com.revature.beans.ExceedFunds;
 import com.revature.beans.FinalForm;
 import com.revature.beans.FormType;
 import com.revature.beans.Reimbursement;
 import com.revature.beans.User;
 import com.revature.beans.UserType;
-import com.revature.services.UserService;
 import com.revature.data.FinalFormDao;
-import com.revature.data.UserDao;
 
 public class FinalFormServiceTest {
 	// do the constructor dance in the actual service
@@ -33,7 +27,6 @@ public class FinalFormServiceTest {
 	private static FinalForm form;
 	private static User user;
 	private static Reimbursement reimburse;
-	private static FinalForm testForm2;
 	
 	@BeforeAll
 	public static void setUpClass() {
@@ -88,12 +81,14 @@ public class FinalFormServiceTest {
 		
 		service.add(reimburse, form.getFormType());
 		
-		testForm2 = service.getById(form.getEmployee(), form.getId());
+		ArgumentCaptor<FinalForm> captor = ArgumentCaptor.forClass(FinalForm.class);
 		
-		//assertEquals(testForm2, null, "assert");
-		assertNotEquals(form.getId(), testForm2.getId(), "Assert Id is the same");
+		Mockito.verify(service.finalDao).addFinalForm(captor.capture());
+		
+		FinalForm testForm2 = captor.getValue();
+		
+		assertEquals(form.getId(), testForm2.getId(), "Assert Id is the same");
 		assertEquals("Test", testForm2.getEmployee(), "Assert employee is the same");
-		assertEquals("file.docx", testForm2.getFilename(), "Assert filename is the same");
 	}
 	
 	// update approval

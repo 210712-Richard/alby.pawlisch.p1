@@ -50,8 +50,8 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		reimburse.setRequestAmount(requestAmount);
 		reimburse.setApprovedAmount(null);
 		
-		log.trace("Called apply method in Service");
-		log.debug(reimburse);
+		//log.trace("Called apply method in Service");
+		//log.debug(reimburse);
 		
 		reimburseDao.addReimbursement(reimburse);
 		
@@ -69,6 +69,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 	public Reimbursement viewOneReimbursement(UUID id, String employee) {
 		Reimbursement reimbursement = reimburseDao.getReimbursementById(id, employee);
 		return reimbursement;
+		
 	}
 	
 	@Override
