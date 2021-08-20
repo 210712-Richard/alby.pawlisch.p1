@@ -20,11 +20,8 @@ import io.javalin.plugin.json.JavalinJackson;
 public class Driver {
 	public static void main(String[] args) {
 		
-		instantiateDatabase();
-		//DataBaseCreator.dropTables();
-		//DataBaseCreator.createTables();
-		//DataBaseCreator.populateUserTable();
-		//javalin();
+		//instantiateDatabase();
+		javalin();
 		
 	}
 	
